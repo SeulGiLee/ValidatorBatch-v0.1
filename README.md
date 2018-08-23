@@ -18,7 +18,7 @@ OpenGeoDT 팀
 
 특징
 =====
-- QGIS 플러그인에서 Java 클래스를 direct로 연결하지 못하기 때문에 외부에서 호출이 가능하게 Batch 파일로 연동합니다. 
+- QGIS 플러그인에서 Java 클래스를 외부에서 호출이 가능하게 Batch 파일로 연동합니다. 
 - 검수 내용은 [공간자료 검증도구v1.0](https://github.com/ODTBuilder/Validator-v1.0) 에 의거합니다.
 
 
