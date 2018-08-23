@@ -22,24 +22,30 @@ OpenGeoDT 팀
 - 검수 내용은 [공간자료 검증도구v1.0](https://github.com/ODTBuilder/Validator-v1.0) 에 의거합니다.
 
 
-Parameter
+파라미터
 =====
-* _--basedir_  :  최상위 폴더
-* _--filetype_  : 파일타입
-  - dxf
-  - ngi
-  - shp
-* _--cidx_  :  옵션타입 
-  - 1 - 수치지도 1.0
-  - 2 - 수치지도 2.0
-  - 3 - 지하시설물 1.0
-  - 4 - 지하시설물 2.0
-  - 5 - 임상도
-* _--layerdefpath_  :  레이어 정의 옵션 경로
-* _--valoptpath_  :  검수 옵션 경로
-* _--objfilepath_  :  검수 대상파일 경로
-* _--crs_ : 좌표계
+```css
+*  --basedir       : 최상위 폴더
+*  --filetype      : 파일타입
+                     dxf
+                     ngi
+                     shp
+*  --cidx          : 옵션타입 
+                     1 - 수치지도  1.0
+                     2 - 수치지도  2.0
+                     3 - 지하시설물 1.0
+                     4 - 지하시설물 2.0
+                     5 - 임상도
+*  --layerdefpath  : 레이어 정의 옵션 경로
+*  --valoptpath    : 검수 옵션 경로
+*  --objfilepath   : 검수 대상파일 경로
+*  --crs           : 좌표계
+```
 
+프로세스구조
+====
+
+<img width="710" alt="2018-08-23 1 25 12" src="https://user-images.githubusercontent.com/13480171/44504711-2e9d2f00-a6d8-11e8-89fc-6371d15ae403.png">
 
 연구기관
 =====
