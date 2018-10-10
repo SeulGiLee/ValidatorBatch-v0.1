@@ -69,7 +69,7 @@ public class QAFileParser {
 			parseForestQA20File();
 			isTrue = true;
 		} else {
-			fileState += "지원하지않는 파일포맷" + brTag;
+			fileState += "지원하지않는 파일포맷입니다." + brTag;
 			isTrue = false;
 		}
 	}
@@ -99,7 +99,7 @@ public class QAFileParser {
 							layerList.add(layer);
 						}
 					} catch (Exception e) {
-						fileState += fileName + ":손상된 파일" + brTag;
+						fileState += fileName + " : 파일이 손상되어 있습니다." + brTag;
 					}
 				}
 			}
@@ -109,17 +109,18 @@ public class QAFileParser {
 				collection.setLayers(layerList);
 				collectionList.add(collection);
 			} else {
-				fileState += collectionName + ":검수 대상 레이어 미존재" + brTag;
+				fileState += collectionName + " : 잘못된 shp파일이거나 지원하지 않는 레이어타입입니다." + brTag;
 			}
 			if (collectionList.size() > 0) {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				fileState += "레이어 정의 옵션과 검수 옵션이 요청 파일에 연관되지 않습니다." + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			fileState += "요청 형식(지하도2.0-shp)과 대상 파일 형식이 다릅니다." + brTag;
+			fileState += "검수 대상이 폴더 형태가 아닌 파일 형태가 필요합니다." + brTag;
 		}
 	}
 
@@ -145,13 +146,13 @@ public class QAFileParser {
 					try {
 						collection = collectionReader.dxfLayerParse(this.epsg, filePath, name, null);
 						if (collection == null) {
-							fileState += fileName + ":검수 대상 레이어 미존재" + brTag;
+							fileState += fileName + " : 잘못된 dxf파일이거나 지원하지 않는 레이어타입입니다." + brTag;
 							continue;
 						} else {
 							collectionList.add(collection);
 						}
 					} catch (Exception e) {
-						fileState += fileName + ":손상된 파일" + brTag;
+						fileState += fileName + " : 파일이 손상되어 있습니다." + brTag;
 					}
 				}
 			}
@@ -159,11 +160,12 @@ public class QAFileParser {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				fileState += "전체 파일에서 " + this.neatLine + " 도곽이 없습니다." + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			fileState += "요청 형식과 대상(지하시설물1.0 - dxf) 파일 형식이 다릅니다." + brTag;
+			fileState += "검수 대상이 폴더 형태가 아닌 파일 형태가 필요합니다." + brTag;
 		}
 	}
 
@@ -188,16 +190,14 @@ public class QAFileParser {
 				try {
 					if (fileName.endsWith("ngi")) {
 						collection = collectionReader.ngiLayerParse(epsg, filePath, name, neatLine);
-						
-						
-						
+
 						if (collection == null) {
-							fileState += fileName + ":검수 대상 레이어 미존재" + brTag;
+							fileState += fileName + " : 잘못된 ngi파일이거나 지원하지 않는 레이어타입입니다." + brTag;
 							continue;
 						}
 					}
 					if (this.neatLine != null && collection.getNeatLine() == null) {
-						this.fileState += fileName + ":도곽미존재" + this.brTag;
+						this.fileState += fileName + " : 일치하는 "+ this.neatLine +" 도곽이 없습니다." + this.brTag;
 						collection = null;
 					}
 					if (this.neatLine != null && collection.getNeatLine() != null) {
@@ -209,32 +209,33 @@ public class QAFileParser {
 						collectionList.add(collection);
 					}
 				} catch (Exception e) {
-					fileState += fileName + ":손상된 파일" + brTag;
+					fileState += fileName + " : 파일이 손상되어 있습니다." + brTag;
 				}
 			}
 			if (collectionList.size() > 0) {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				fileState += "전체 파일에서 " + this.neatLine + " 도곽이 없습니다." + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			fileState += "요청 형식(수치지도2.0 - ngi)과 대상 파일 구조가 다릅니다." + brTag;
+			fileState += "검수 대상이 폴더 형태가 아닌 파일 형태가 필요합니다." + brTag;
 		}
 	}
 
 	/**
 	 * @author DY.Oh
 	 * @Date 2018. 3. 29. 오후 5:49:52 void
-	 * @decription
+	 * @decription ㅁㄴ
 	 */
 	private void parseNumericalQA20ShpFile() {
-
+		
 		if (this.unZipFile.isDir()) {
-			Map<String, FileMetaList> dirMetaList = this.unZipFile.getDirMetaList();
 			DTLayerCollectionList collectionList = new DTLayerCollectionList();
-			Iterator dirIterator = dirMetaList.keySet().iterator();
+			Map<String, FileMetaList> dirMetaList = this.unZipFile.getDirMetaList();
+			Iterator<?> dirIterator = dirMetaList.keySet().iterator();
 			while (dirIterator.hasNext()) {
 				String dirPath = (String) dirIterator.next();
 				String dirName = getDirName(dirPath);
@@ -261,18 +262,19 @@ public class QAFileParser {
 								layerList.add(layer);
 							}
 						} catch (Exception e) {
-							fileState += fileName + ":손상된 파일" + brTag;
+							fileState += fileName + " : 파일이 손상되어 있습니다." + brTag;
 						}
 					}
 				}
 				if (layerList.size() > 0) {
 					collection.setLayers(layerList);
 				} else {
-					fileState += dirName + ":검수 대상 레이어 미존재" + brTag;
+					fileState += dirName + " : 잘못된 shp파일이거나 지원하지 않는 레이어타입입니다." + brTag;
 					continue;
 				}
+				
 				if (this.neatLine != null && collection.getNeatLine().getSimpleFeatureCollection() == null) {
-					this.fileState += dirName + ":도곽미존재" + this.brTag;
+					this.fileState += dirName + " : 일치하는 "+ this.neatLine +" 도곽이 없습니다." + this.brTag;
 					collection = null;
 				}
 				if (this.neatLine != null && collection.getNeatLine().getSimpleFeatureCollection() != null) {
@@ -288,11 +290,12 @@ public class QAFileParser {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				fileState += "전체 파일에서 " + this.neatLine + " 에 해당하는 도곽이 없습니다." + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			fileState += "요청 형식(수치지도2.0 - shp)과 대상 파일 형식이 다릅니다." + brTag;
+			fileState += "검수 대상이 파일 형태가 아닌 폴더 형태가 필요합니다." + brTag;
 		}
 	}
 
@@ -302,32 +305,31 @@ public class QAFileParser {
 	 * @decription
 	 */
 	private void parseNumericalQA10File() {
-
+		
 		if (this.unZipFile.isFiles()) {
-
 			FileMetaList metaList = this.unZipFile.getFileMetaList();
 			DTLayerCollectionList collectionList = new DTLayerCollectionList();
 			FileDTLayerCollectionReader collectionReader = new FileDTLayerCollectionReader();
+			
 			for (int i = 0; i < metaList.size(); i++) {
 				FileMeta fileMeta = metaList.get(i);
 				String filePath = fileMeta.getFilePath();
 				String fileName = fileMeta.getFileName();
 				int pos = fileName.lastIndexOf(".");
 				String name = fileName.substring(0, pos);
+				
 				if (fileName.endsWith("dxf")) {
 					DTLayerCollection collection = null;
 					try {
 						collection = collectionReader.dxfLayerParse(this.epsg, filePath, name, this.neatLine);
 
-				
-
 						if (collection == null) {
-							fileState += fileName + ":검수 대상 레이어 미존재" + brTag;
+							fileState += fileName + " : 잘못된 dxf파일이거나 지원하지 않는 레이어타입입니다." + brTag;
 							continue;
 						}
 						DTLayer neatLineLayer = collection.getNeatLine();
 						if (this.neatLine != null && neatLineLayer == null) {
-							this.fileState += fileName + ":도곽미존재" + this.brTag;
+							this.fileState += fileName + " : 일치하는 "+ this.neatLine +" 도곽이 없습니다." + this.brTag;
 							collection = null;
 							continue;
 						}
@@ -339,7 +341,7 @@ public class QAFileParser {
 							collectionList.add(collection);
 						}
 					} catch (Exception e) {
-						fileState += fileName + ":손상된 파일" + brTag;
+						fileState += fileName + " : 파일이 손상되어 있습니다." + brTag;
 					}
 				}
 			}
@@ -347,20 +349,23 @@ public class QAFileParser {
 				this.collectionList = collectionList;
 			} else {
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
+				fileState += "전체 파일에서 " + this.neatLine + " 도곽이 없습니다." + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			fileState += "요청 형식(수치지도 1.0-dxf)과 대상 파일 형식이 다릅니다." + brTag;
+			fileState += "검수 대상이 폴더 형태가 아닌 파일 형태가 필요합니다." + brTag;
 		}
 	}
 
 	private void parseForestQA20File() {
+		
+
 
 		if (this.unZipFile.isDir()) {
 			Map<String, FileMetaList> dirMetaList = this.unZipFile.getDirMetaList();
 			DTLayerCollectionList collectionList = new DTLayerCollectionList();
-			Iterator dirIterator = dirMetaList.keySet().iterator();
+			Iterator<?> dirIterator = dirMetaList.keySet().iterator();
 			while (dirIterator.hasNext()) {
 				String dirPath = (String) dirIterator.next();
 				String dirName = getDirName(dirPath);
@@ -388,15 +393,13 @@ public class QAFileParser {
 								layerList.add(layer);
 							}
 						} catch (Exception e) {
-							// e.printStackTrace();
-							// System.out.println(e.);
-							// fileState += fileName + ":손상된 파일" + brTag;
+							fileState += fileName + " : 파일이 손상되어 있습니다." + brTag;
 						}
 					}
 				}
 				if (layerList.size() > 0) {
 					if (this.neatLine != null && neatlineLayer.getSimpleFeatureCollection() == null) {
-						this.fileState += dirName + ":도곽미존재" + this.brTag;
+						this.fileState += dirName + " : 일치하는 도곽이 없습니다." + this.brTag;
 					}
 					if (this.neatLine != null && neatlineLayer.getSimpleFeatureCollection() != null) {
 						DTLayerCollection setDTCollection = setForestNeatLine(collection, neatlineLayer);
@@ -404,29 +407,30 @@ public class QAFileParser {
 						setDTCollection.setLayers(layerList);
 						setDTCollection
 								.setMapRule(new MapSystemRule().setMapSystemRule(setDTCollection.getCollectionName()));
-						if (setDTCollection != null) {
+
+						if (setDTCollection.getNeatLine() != null) {
 							collectionList.add(setDTCollection);
 						} else {
-							this.fileState += dirName + ":도곽미존재" + this.brTag;
+							this.fileState += dirName + " : 일치하는 도곽이 없습니다." + brTag;
 						}
 					}
 				} else {
 					if (!collection.getCollectionName().equals(this.neatLine)) {
-						this.fileState += dirName + ":검수 대상 레이어 미존재" + brTag;
+						this.fileState += dirName + " : 잘못된 shp파일이거나 지원하지 않는 레이어타입입니다." + brTag;
 						continue;
 					}
 				}
-
 			}
 			if (collectionList.size() > 0) {
 				this.collectionList = collectionList;
 			} else {
+				fileState += "전체 파일에서 " + this.neatLine + " 도곽이 없습니다." + brTag;
 				this.collectionList = null;
-				fileState += "검수 대상 파일 미존재" + brTag;
 			}
 		} else {
 			this.collectionList = null;
-			fileState += "검수 대상 파일 미존재" + brTag;
+			fileState += "요청 형식(임상도-shp)과 대상 파일 형식이 다릅니다." + brTag;
+			fileState += "검수 대상이 파일 형태가 아닌 폴더 형태가 필요합니다." + brTag;
 		}
 	}
 
@@ -441,10 +445,10 @@ public class QAFileParser {
 
 		SimpleFeatureCollection neatSfc = neatlineLayer.getSimpleFeatureCollection();
 		SimpleFeatureIterator iter = neatSfc.features();
-
 		DTLayerCollection dtLayerCollection = new DTLayerCollection();
 		DefaultFeatureCollection dfc = new DefaultFeatureCollection();
 		String collectionName = collection.getCollectionName();
+
 		while (iter.hasNext()) {
 			SimpleFeature sf = iter.next();
 			Object num = sf.getAttribute("ALLNUM");
@@ -460,7 +464,11 @@ public class QAFileParser {
 			}
 		}
 		iter.close();
-		return dtLayerCollection;
+		// 널일 경우 추가 yhg
+		if (dtLayerCollection.getNeatLine() == null)
+			return null;
+		else
+			return dtLayerCollection;
 	}
 
 	private static String getDirName(String dirName) {

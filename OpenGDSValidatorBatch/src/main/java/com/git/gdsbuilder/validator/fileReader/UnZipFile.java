@@ -413,14 +413,15 @@ public class UnZipFile {
 	public int getTotalSize(){
 		return this.totalFileSize;
 	}
-
+/*
+ * 
 	private String getFileName(String filePath) {
-
 		String[] splitArr = filePath.split("\\\\");
 		String fileName = splitArr[splitArr.length - 1];
 		int pos = fileName.lastIndexOf(".");
 		return fileName.substring(0, pos);
 	}
+ */
 
 	public String getFileState() {
 		return fileState;
@@ -521,6 +522,5 @@ public class UnZipFile {
 	public void setFiles(boolean isFiles) {
 		this.isFiles = isFiles;
 	}
-	
 	
 }

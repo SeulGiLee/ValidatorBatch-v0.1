@@ -11,7 +11,6 @@ import com.git.gdsbuilder.validator.fileReader.shp.parser.SHPFileLayerParser;
 
 public class SHPFileReader {
 
-	@SuppressWarnings("unchecked")
 	public DTLayerCollection read(String epsg, String filePath, String fileName, String neatLineName) throws Exception {
 		org.geotools.util.logging.Logging.getLogger("org").setLevel(Level.OFF);
 		DTLayerCollection dtCollectoin = new DTLayerCollection();
@@ -74,7 +73,6 @@ public class SHPFileReader {
 	}
 
 	private String getFileName(String filePath) {
-
 		String[] splitArr = filePath.split("\\\\");
 		String fileName = splitArr[splitArr.length - 1];
 		int pos = fileName.lastIndexOf(".");

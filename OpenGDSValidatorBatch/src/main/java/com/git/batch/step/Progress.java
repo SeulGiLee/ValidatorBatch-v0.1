@@ -1,14 +1,9 @@
 package com.git.batch.step;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.geotools.feature.SchemaException;
 import org.opengis.referencing.FactoryException;
@@ -20,7 +15,6 @@ import com.git.gdsbuilder.type.dt.collection.DTLayerCollectionList;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule;
 import com.git.gdsbuilder.type.dt.collection.MapSystemRule.MapSystemRuleType;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
-import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerType;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
@@ -28,15 +22,7 @@ import com.git.gdsbuilder.type.validate.option.QAOption;
 import com.git.gdsbuilder.type.validate.option.specific.AttributeMiss;
 import com.git.gdsbuilder.type.validate.option.specific.CloseMiss;
 import com.git.gdsbuilder.type.validate.option.specific.GraphicMiss;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;
-import com.git.gdsbuilder.type.validate.option.specific.OptionFilter;
-import com.git.gdsbuilder.type.validate.option.specific.OptionRelation;
-import com.git.gdsbuilder.type.validate.option.specific.OptionTolerance;
-import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
 import com.git.gdsbuilder.type.validate.option.standard.LayerFixMiss;
-import com.git.gdsbuilder.validator.collection.CloseLayerOp;
-import com.git.gdsbuilder.validator.layer.LayerValidator;
-import com.git.gdsbuilder.validator.layer.LayerValidatorImpl;
 
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarStyle;
@@ -54,8 +40,10 @@ public class Progress {
 	}
 
 	public void startProgress() {
-		//System.out.println(max);
-		pb = new ProgressBar("진행중", 100, ProgressBarStyle.ASCII);
+		// System.out.println(max);
+		// pb = new ProgressBar("진행중", 100, ProgressBarStyle.ASCII);
+		// default : System.err 에서 변경
+		pb = new ProgressBar("진행중", 100, 1000, System.out, ProgressBarStyle.ASCII, "", 1);
 	}
 
 	public static void modifyMax() {
@@ -88,7 +76,7 @@ public class Progress {
 	}
 
 	public void updateProgress() {
-		//System.out.println("MAX : " + max + " CURR : " + ++i);
+		// System.out.println("MAX : " + max + " CURR : " + ++i);
 		if (pb != null) {
 			long plus = convertStepByMax();
 			if (plus < pb.getMax()) {
@@ -107,19 +95,20 @@ public class Progress {
 			}
 		}
 	}
-	
-	public void terminate(){
-		if(pb != null){
+
+	public void terminate() {
+		if (pb != null) {
 			pb.stepTo(100);
 			pb.close();
 			pb = null;
 		}
 	}
 
+	// 도엽 검수
 	private void closeCollectionValidate(QALayerTypeList types, DTLayerCollection collection,
 			DTLayerCollectionList closeCollections) {
 
-		DTLayer neatLine = collection.getNeatLine();
+		// DTLayer neatLine = collection.getNeatLine();
 		MapSystemRule mapSystemRule = collection.getMapRule();
 		Map<MapSystemRuleType, DTLayerCollection> closeMap = new HashMap<>();
 
@@ -174,7 +163,6 @@ public class Progress {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private void attributeValidate(QALayerTypeList types, DTLayerCollection layerCollection) throws SchemaException {
 		for (QALayerType type : types) {
 			// getTypeOption
@@ -197,7 +185,7 @@ public class Progress {
 		}
 	}
 
-	@SuppressWarnings("unused")
+	// 그래픽 검수
 	private void geometricValidate(QALayerTypeList types, DTLayerCollection layerCollection)
 			throws SchemaException, NoSuchAuthorityCodeException, FactoryException, TransformException, IOException {
 		for (QALayerType type : types) {
@@ -243,6 +231,6 @@ public class Progress {
 	}
 
 	public long getMax() {
-		return this.max;
+		return Progress.max;
 	}
 }

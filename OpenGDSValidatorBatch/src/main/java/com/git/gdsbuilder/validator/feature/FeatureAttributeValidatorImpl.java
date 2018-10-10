@@ -439,8 +439,9 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 						isError = true;
 						comment += "UFID규칙오류";
 					}
-					String field = ufid.substring(17, 18); // 결정조건 코드 1자리
-					String errorField = ufid.substring(33, 34); // parity 코드
+					
+					// String field = ufid.substring(17, 18); // 결정조건 코드 1자리
+					// String errorField = ufid.substring(33, 34); // parity 코드
 				}
 			}
 		}
@@ -512,7 +513,8 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			return null;
 		}
 	}
-
+/*
+ * 
 	private static boolean isStringDouble(String s) {
 		try {
 			Double.parseDouble(s);
@@ -521,6 +523,7 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 			return false;
 		}
 	}
+ */
 
 	@Override
 	public ErrorFeature validateEntityDuplicated(DTFeature featureI, DTFeature featureJ) {
@@ -528,8 +531,8 @@ public class FeatureAttributeValidatorImpl implements FeatureAttributeValidator 
 		SimpleFeature sfI = featureI.getSimefeature();
 		SimpleFeature sfJ = featureJ.getSimefeature();
 
-		List attrIList = sfI.getAttributes();
-		List attrJList = sfJ.getAttributes();
+		List<?> attrIList = sfI.getAttributes();
+		List<?> attrJList = sfJ.getAttributes();
 
 		int equalsCount = 0;
 		for (int i = 1; i < attrIList.size(); i++) {

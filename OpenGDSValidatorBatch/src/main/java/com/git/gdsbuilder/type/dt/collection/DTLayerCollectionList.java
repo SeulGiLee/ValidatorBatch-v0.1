@@ -28,6 +28,7 @@ import com.git.gdsbuilder.type.dt.layer.DTLayer;
  * @author DY.Oh
  * @Date 2017. 3. 11. 오전 11:45:30
  */
+@SuppressWarnings("serial")
 public class DTLayerCollectionList extends ArrayList<DTLayerCollection> {
 
 	public long getAllLayerSize() {

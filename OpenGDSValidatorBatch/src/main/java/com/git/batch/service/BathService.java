@@ -1,29 +1,27 @@
 package com.git.batch.service;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.geotools.feature.SchemaException;
-import org.geotools.util.logging.Logging;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -34,6 +32,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.git.batch.step.Progress;
+import com.git.gdsbuilder.file.FileMeta;
+import com.git.gdsbuilder.file.FileMetaList;
 import com.git.gdsbuilder.file.writer.SHPFileWriter;
 import com.git.gdsbuilder.parser.file.QAFileParser;
 import com.git.gdsbuilder.parser.qa.QATypeParser;
@@ -44,14 +44,10 @@ import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
 import com.git.gdsbuilder.validator.fileReader.UnZipFile;
 
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarStyle;
-
 public class BathService {
 
 	private static final String QA1DEFDIR;
 	private static final String QA2DEFDIR;
-
 	private static final String NM1LAYERDEF;
 	private static final String NM5LAYERDEF;
 	private static final String NM25LAYERDEF;
@@ -227,10 +223,12 @@ public class BathService {
 
 		// 옵션또는 파일이 제대로 넘어오지 않았을때 강제로 예외발생
 		if (qaVer == null || qaType == null || prid == null) {
-			logger.info("다시 요청해주세요.");
+//			logger.info("다시 요청해주세요.");
+			System.out.println("다시 요청해주세요.");
 			return isSuccess;
 		} else if (fileformat == null) {
-			logger.info("파일포맷을 설정해주세요.");
+			System.out.println("파일포맷을 설정해주세요.");
+//			logger.info("파일포맷을 설정해주세요.");
 			return isSuccess;
 		} else {
 			long time = System.currentTimeMillis();
@@ -238,28 +236,73 @@ public class BathService {
 			SimpleDateFormat dayTime = new SimpleDateFormat("yyMMdd_HHmmss");
 			String cTimeStr = dayTime.format(new Date(time));
 
-			String basePath = baseDir + File.separator + cTimeStr;
+			// temp file 적용 시작
+			// Windows Temp기본 경로 : C:\Users\GIT\AppData\Local\Temp\
+			String defaultTempPath = System.getProperty("java.io.tmpdir") + "GeoDT";
+			if (!new File(defaultTempPath).exists()) {
+				new File(defaultTempPath).mkdirs();
+			}
 
-			File baseDirFile = new File(basePath);
-
-			// String zipfilePath = basePath + "zipfiles";
-			// createFileDirectory(zipfilePath);
-
-			String fileunzipPath = basePath + File.separator + "unzipfiles";
-			createFileDirectory(fileunzipPath);
-
-			UnZipFile unZipFile = new UnZipFile(fileunzipPath);
+			// C:\Users\GIT\AppData\Local\Temp\GeoDT\...
+			Path tmpBasedir = Files.createTempDirectory(Paths.get(defaultTempPath), "Validate_temp_");
+			Path tmpFileunzipPath = Files.createTempDirectory(tmpBasedir, "unzipfiles");
+			UnZipFile unZipFile = new UnZipFile(tmpFileunzipPath.toString());
 			unZipFile.decompress(new File(objFilePath), cIdx);
 			totalValidSize = unZipFile.getTotalSize();
 			String comment = unZipFile.getFileState();
-
-			if (!comment.equals("")) {
-				logger.info(comment);
+			
+			/*  #####################################
+			 *  yhg
+			 *  적어도 해당 파일 형식이 한 개는 있는지 검사
+			 */
+			boolean checkExt = false;
+			if(unZipFile.isFiles()) {			
+				FileMetaList fList = unZipFile.getFileMetaList();
+				for (FileMeta fMeta : fList) {
+					if(fMeta.getFileName().endsWith(fileType)) {
+						checkExt = true;
+						break;
+					}
+				}
+			} else if(unZipFile.isDir()){
+				Map<String, FileMetaList> dirMetaList = unZipFile.getDirMetaList();
+				Iterator<?> dirIterator = dirMetaList.keySet().iterator();
+				while (dirIterator.hasNext()) {
+					String dirPath = (String) dirIterator.next();
+					FileMetaList metaList = dirMetaList.get(dirPath);
+					for (FileMeta fileMeta : metaList) {
+						if (fileMeta.getFileName().endsWith(fileType)) {
+							checkExt = true;
+							break;
+						}
+					}
+				}
 			}
+			if(!checkExt) {
+				System.out.println("검수 대상 파일에 " + fileType + "가 존재하지 않습니다.");
+				throw new Throwable();
+			}
+			// #####################################
+
+			
+
 			// option parsing
 			JSONParser jsonP = new JSONParser();
-			JSONObject option = (JSONObject) ((Object) jsonP.parse(new FileReader(valOptPath)));
-			JSONArray layers = (JSONArray) ((Object) jsonP.parse(new FileReader(layerDefPath)));
+			JSONObject option = null;
+			JSONArray layers = null;
+			try {
+				option = (JSONObject) ((Object) jsonP.parse(new FileReader(valOptPath)));
+			} catch (ClassCastException e) {
+				System.out.println("잘못된 옵션 파일입니다.");
+				throw new Throwable();
+			}
+			try {
+				layers = (JSONArray) ((Object) jsonP.parse(new FileReader(layerDefPath)));				
+			} catch (ClassCastException e) {
+				System.out.println("잘못된 레이어 정의 파일입니다.");
+				throw new Throwable();
+			}
+			
 
 			Object neatLine = option.get("border");
 			String neatLineCode = null;
@@ -267,6 +310,7 @@ public class BathService {
 				JSONObject neatLineObj = (JSONObject) neatLine;
 				neatLineCode = (String) neatLineObj.get("code");
 			}
+			
 
 			// files
 			QAFileParser parser = new QAFileParser(epsg, cIdx, support, unZipFile, neatLineCode);
@@ -274,9 +318,10 @@ public class BathService {
 			if (!parseTrue) {
 				comment += parser.getFileState();
 				if (!comment.equals("")) {
-					logger.info(comment);
+//					logger.info(comment);
+					System.out.println(comment);
 				}
-				deleteDirectory(baseDirFile);
+				deleteDirectory(tmpBasedir.toFile());
 				return isSuccess;
 			}
 
@@ -285,15 +330,17 @@ public class BathService {
 				// 파일 다 에러
 				comment += parser.getFileState();
 				if (!comment.equals("")) {
-					logger.info(comment);
+//					logger.info(comment);
+					System.out.println(comment);
 				}
-				deleteDirectory(baseDirFile);
+				deleteDirectory(tmpBasedir.toFile());
 				return isSuccess;
 			} else {
 				// 몇개만 에러
 				comment += parser.getFileState();
 				if (!comment.equals("")) {
-					logger.info(comment);
+//					logger.info(comment);
+					System.out.println(comment);
 				}
 			}
 			JSONArray typeValidate = (JSONArray) option.get("definition");
@@ -322,9 +369,10 @@ public class BathService {
 			if (validateLayerTypeList == null) {
 				comment += validateTypeParser.getComment();
 				if (!comment.equals("")) {
-					logger.info(comment);
+//					logger.info(comment);
+					System.out.println(comment);
 				}
-				deleteDirectory(baseDirFile);
+				deleteDirectory(tmpBasedir.toFile());
 				return isSuccess;
 			}
 			validateLayerTypeList.setCategory(cIdx);
@@ -341,7 +389,8 @@ public class BathService {
 			// excute validation
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg);
 			if (isSuccess) {
-				logger.info("검수 요청이 성공적으로 완료되었습니다.");
+//				logger.info("검수 요청이 성공적으로 완료되었습니다.");
+				System.out.println("검수 요청이 성공적으로 완료되었습니다.");
 				// zip err shp directory
 				/*
 				 * zipFileDirectory(); InputStream inputStream = new
@@ -349,14 +398,15 @@ public class BathService {
 				 */
 			} else {
 				// insert validate state
-				logger.info("검수 요청이 실패했습니다.");
+//				logger.info("검수 요청이 실패했습니다.");
+				System.out.println("검수 요청이 실패했습니다.");
 			}
 			validateTypeParser = null;
 			validateLayerTypeList = null;
 			unZipFile = null;
 			parser = null;
 			collectionList = null;
-			deleteDirectory(baseDirFile);
+			deleteDirectory(tmpBasedir.toFile());
 			return isSuccess;
 		}
 	}
@@ -384,13 +434,14 @@ public class BathService {
 		org.geotools.util.logging.Logging.getLogger("org").setLevel(Level.OFF);
 
 		// 도엽별 검수 쓰레드 생성
-		List<Future> futures = new ArrayList<>();
+		List<Future<?>> futures = new ArrayList<>();
 		ExecutorService execService = Executors.newFixedThreadPool(3);
+//		ExecutorService execService = Executors.newCachedThreadPool();
 
 		pb = new Progress();
 		for (final DTLayerCollection collection : collectionList) {
-			pb.countTotalTask(validateLayerTypeList, collection, collectionList
-								.getCloseLayerCollections(collection.getMapRule()));
+			pb.countTotalTask(validateLayerTypeList, collection,
+					collectionList.getCloseLayerCollections(collection.getMapRule()));
 		}
 		pb.startProgress();
 
@@ -410,14 +461,14 @@ public class BathService {
 				}
 			};
 
-			Future future = execService.submit(runnable);
+			Future<?> future = execService.submit(runnable);
 			futures.add(future);
 		}
 		// final long totalAmount = collectionList.getAllLayerSize();
 		int futureCount = 0;
 
 		for (int i = 0; i < futures.size(); i++) {
-			Future tmp = futures.get(i);
+			Future<?> tmp = futures.get(i);
 			try {
 				tmp.get();
 				futureCount++;
@@ -432,61 +483,42 @@ public class BathService {
 
 		execService.shutdown();
 		pb.terminate();
-		System.out.println("검수가 완료되었습니다.");
+		// System.out.println("검수가 완료되었습니다.");
 
 		return futureCount == collectionList.size();
 	}
 
-	private void zipFileDirectory() {
+	/*
+	 * private void zipFileDirectory() {
+	 * 
+	 * File directory = new File(ERR_FILE_DIR); List<String> fileList =
+	 * getFileList(directory); try { ERR_ZIP_DIR = ERR_FILE_DIR + ".zip";
+	 * FileOutputStream fos = new FileOutputStream(ERR_ZIP_DIR); ZipOutputStream zos
+	 * = new ZipOutputStream(fos);
+	 * 
+	 * for (String filePath : fileList) { String name =
+	 * filePath.substring(directory.getAbsolutePath().length() + 1,
+	 * filePath.length()); ZipEntry zipEntry = new ZipEntry(name);
+	 * zos.putNextEntry(zipEntry); FileInputStream fis = new
+	 * FileInputStream(filePath); byte[] buffer = new byte[1024]; int length; while
+	 * ((length = fis.read(buffer)) > 0) { zos.write(buffer, 0, length); }
+	 * zos.closeEntry(); fis.close();
+	 * 
+	 * // 압축 후 삭제 File file = new File(filePath); file.delete(); } zos.close();
+	 * fos.close(); directory.delete(); } catch (IOException e) {
+	 * e.printStackTrace(); } }
+	 */
 
-		File directory = new File(ERR_FILE_DIR);
-		List<String> fileList = getFileList(directory);
-		try {
-			ERR_ZIP_DIR = ERR_FILE_DIR + ".zip";
-			FileOutputStream fos = new FileOutputStream(ERR_ZIP_DIR);
-			ZipOutputStream zos = new ZipOutputStream(fos);
-
-			for (String filePath : fileList) {
-				String name = filePath.substring(directory.getAbsolutePath().length() + 1, filePath.length());
-				ZipEntry zipEntry = new ZipEntry(name);
-				zos.putNextEntry(zipEntry);
-				FileInputStream fis = new FileInputStream(filePath);
-				byte[] buffer = new byte[1024];
-				int length;
-				while ((length = fis.read(buffer)) > 0) {
-					zos.write(buffer, 0, length);
-				}
-				zos.closeEntry();
-				fis.close();
-
-				// 압축 후 삭제
-				File file = new File(filePath);
-				file.delete();
-			}
-			zos.close();
-			fos.close();
-			directory.delete();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private List<String> getFileList(File directory) {
-
-		List<String> fileList = new ArrayList<>();
-
-		File[] files = directory.listFiles();
-		if (files != null && files.length > 0) {
-			for (File file : files) {
-				if (file.isFile()) {
-					fileList.add(file.getAbsolutePath());
-				} else {
-					getFileList(file);
-				}
-			}
-		}
-		return fileList;
-	}
+	/*
+	 * private List<String> getFileList(File directory) {
+	 * 
+	 * List<String> fileList = new ArrayList<>();
+	 * 
+	 * File[] files = directory.listFiles(); if (files != null && files.length > 0)
+	 * { for (File file : files) { if (file.isFile()) {
+	 * fileList.add(file.getAbsolutePath()); } else { getFileList(file); } } }
+	 * return fileList; }
+	 */
 
 	private boolean writeErrShp(String epsg, CollectionValidator validator) {
 		try {
@@ -526,10 +558,9 @@ public class BathService {
 		dir.delete();
 	}
 
-	public int COMPARETYPE_NAME = 0;
-	public int COMPARETYPE_DATE = 1;
-
 	public File[] sortFileList(File[] files, final int compareType) {
+		int COMPARETYPE_NAME = 0;
+		int COMPARETYPE_DATE = 1;
 
 		Arrays.sort(files, new Comparator<Object>() {
 			@Override
@@ -545,9 +576,7 @@ public class BathService {
 					s1 = ((File) object1).lastModified() + "";
 					s2 = ((File) object2).lastModified() + "";
 				}
-
 				return s1.compareTo(s2);
-
 			}
 		});
 
@@ -630,81 +659,83 @@ public class BathService {
 	 * @param unzipFolder
 	 *            void
 	 */
-	private static File[] createCollectionFolders(File unzipFolder) {
-		boolean equalFlag = false; // 파일명이랑 압축파일명이랑 같을시 대비 flag값
-		String unzipName = unzipFolder.getName();
-
-		if (unzipFolder.exists() == false) {
-			System.out.println("경로가 존재하지 않습니다");
-		}
-
-		File[] fileList = unzipFolder.listFiles();
-		List<File> indexFiles = new ArrayList<File>();
-		String parentPath = unzipFolder.getParent(); // 상위 폴더 경로
-
-		for (int i = 0; i < fileList.length; i++) {
-			if (fileList[i].isDirectory()) {
-				/*
-				 * String message = "[디렉토리] "; message = fileList[ i
-				 * ].getName(); System.out.println( message );
-				 * 
-				 * subDirList( fileList[ i ].getPath());//하위 폴더 탐색
-				 */ } else {
-				String filePath = fileList[i].getPath();
-				String fFullName = fileList[i].getName();
-
-				int Idx = fFullName.lastIndexOf(".");
-				String _fileName = fFullName.substring(0, Idx);
-
-				if (_fileName.equals(unzipName)) {
-					equalFlag = true;
-				}
-
-				if (_fileName.endsWith("index")) {
-					indexFiles.add(fileList[i]);// 도곽파일 리스트 add(shp,shx...)
-				} else {
-					if (_fileName.contains(".")) {
-						moveDirectory(_fileName.substring(0, _fileName.lastIndexOf(".")), fFullName, filePath,
-								parentPath);
-					} else {
-						moveDirectory(_fileName, fFullName, filePath, parentPath);
-					}
-				}
-			}
-		}
-
-		fileList = unzipFolder.listFiles();
-
-		// 도엽별 폴더 생성후 도곽파일 이동복사
-		for (int i = 0; i < fileList.length; i++) {
-			if (fileList[i].isDirectory()) {
-				for (File iFile : indexFiles) {
-					try {
-						FileNio2Copy(iFile.getPath(), fileList[i].getPath() + File.separator + iFile.getName());
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						System.out.println(e.getMessage());
-					}
-				}
-			}
-		}
-
-		// index파일 삭제
-		for (File iFile : indexFiles) {
-			iFile.delete();
-		}
-
-		// 원래 폴더 삭제
-		if (!equalFlag) {
-			unzipFolder.delete();
-		}
-
-		// 파일 사용후 객체초기화
-		fileList = null;
-		indexFiles = null;
-
-		return new File(parentPath).listFiles();
-	}
+	// private static File[] createCollectionFolders(File unzipFolder) {
+	// boolean equalFlag = false; // 파일명이랑 압축파일명이랑 같을시 대비 flag값
+	// String unzipName = unzipFolder.getName();
+	//
+	// if (unzipFolder.exists() == false) {
+	// System.out.println("경로가 존재하지 않습니다");
+	// }
+	//
+	// File[] fileList = unzipFolder.listFiles();
+	// List<File> indexFiles = new ArrayList<File>();
+	// String parentPath = unzipFolder.getParent(); // 상위 폴더 경로
+	//
+	// for (int i = 0; i < fileList.length; i++) {
+	// if (fileList[i].isDirectory()) {
+	// /*
+	// * String message = "[디렉토리] "; message = fileList[ i
+	// * ].getName(); System.out.println( message );
+	// *
+	// * subDirList( fileList[ i ].getPath());//하위 폴더 탐색
+	// */ } else {
+	// String filePath = fileList[i].getPath();
+	// String fFullName = fileList[i].getName();
+	//
+	// int Idx = fFullName.lastIndexOf(".");
+	// String _fileName = fFullName.substring(0, Idx);
+	//
+	// if (_fileName.equals(unzipName)) {
+	// equalFlag = true;
+	// }
+	//
+	// if (_fileName.endsWith("index")) {
+	// indexFiles.add(fileList[i]);// 도곽파일 리스트 add(shp,shx...)
+	// } else {
+	// if (_fileName.contains(".")) {
+	// moveDirectory(_fileName.substring(0, _fileName.lastIndexOf(".")), fFullName,
+	// filePath,
+	// parentPath);
+	// } else {
+	// moveDirectory(_fileName, fFullName, filePath, parentPath);
+	// }
+	// }
+	// }
+	// }
+	//
+	// fileList = unzipFolder.listFiles();
+	//
+	// // 도엽별 폴더 생성후 도곽파일 이동복사
+	// for (int i = 0; i < fileList.length; i++) {
+	// if (fileList[i].isDirectory()) {
+	// for (File iFile : indexFiles) {
+	// try {
+	// FileNio2Copy(iFile.getPath(), fileList[i].getPath() + File.separator +
+	// iFile.getName());
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// System.out.println(e.getMessage());
+	// }
+	// }
+	// }
+	// }
+	//
+	// // index파일 삭제
+	// for (File iFile : indexFiles) {
+	// iFile.delete();
+	// }
+	//
+	// // 원래 폴더 삭제
+	// if (!equalFlag) {
+	// unzipFolder.delete();
+	// }
+	//
+	// // 파일 사용후 객체초기화
+	// fileList = null;
+	// indexFiles = null;
+	//
+	// return new File(parentPath).listFiles();
+	// }
 
 	/**
 	 * 파일이동

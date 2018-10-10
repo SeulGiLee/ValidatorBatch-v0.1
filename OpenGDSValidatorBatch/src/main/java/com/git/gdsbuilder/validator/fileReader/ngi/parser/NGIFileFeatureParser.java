@@ -156,7 +156,7 @@ public class NGIFileFeatureParser {
 		String id = StringReplace(featureID);
 
 		if (id.equals("RECORD 3877")) {
-			System.out.println("");
+//			System.out.println("");
 		}
 
 		String line = ngiReader.readLine();

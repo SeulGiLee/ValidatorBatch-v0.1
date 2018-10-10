@@ -1,14 +1,7 @@
 package com.git.batch;
 
-import org.slf4j.LoggerFactory;
-
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-
-import org.geotools.util.logging.Logging;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
@@ -24,30 +17,17 @@ public class App {
 	
 	static Logger logger = LoggerFactory.getLogger(App.class);
 	static final BathService service = new BathService();
-	
-	boolean flag = false;
-	
+
 	public static void main(String[] args) {
 		boolean flag = false;
 		System.out.println("\n검수를 진행합니다.");
 		
-	/*	String valType = "";
-		String pFlag = ""; 
-		String valDType = ""; 
-		String fileType = "shp"; 
-		int category = 5;
-		String layerDefPath = "D:" + File.separator +"val" + File.separator + "임상도layer.json";
-		String valOptPath = "D:" + File.separator +"val" + File.separator + "임상도option.json";
-		String objFilePath = "D:" + File.separator +"val" + File.separator + "50000.zip";
-		String crs = "EPSG:5186";*/
-		
-		
 		BatchArgs params = new BatchArgs();
 		JCommander cmd = new JCommander(params);
-
+ 
 		try { // Parse given arguments
 			cmd.parse(args);
-
+			
 			String baseDir = params.getBaseDir();
 			String valType = params.getValType();
 			String pFlag = params.getpFlag();
@@ -63,33 +43,21 @@ public class App {
 				flag = service.validate(baseDir, valType, pFlag, valDType, fileType, category, layerDefPath, valOptPath,
 						objFilePath, crs);
 				if (flag) {
-					logger.warn("요청 성공");
+//					logger.warn("요청 성공");
+					System.out.println("요청 성공");
 				} else {
-					logger.info("요청 실패");
+//					logger.info("요청 실패");
+					System.out.println("요청 실패");
 				}
 			} catch (Throwable e) {
 				// TODO Auto-generated catch block
-				logger.info("요청 실패");
+//				logger.info("요청 실패");
+				System.out.println("요청 실패");
 			}
 
 		} catch (ParameterException e) {
 			JCommander.getConsole().println(e.toString());
 			cmd.usage();
 		}
-		
-		
-		/*try {
-			flag = service.validate(valType, pFlag, valDType, fileType, category, layerDefPath, valOptPath, objFilePath, crs);
-			if(flag){
-				logger.warn("요청 성공");
-			}else{
-				logger.info("요청 실패");
-			}
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			logger.info("요청 실패");
-		}*/
-		
-
 	}
 }

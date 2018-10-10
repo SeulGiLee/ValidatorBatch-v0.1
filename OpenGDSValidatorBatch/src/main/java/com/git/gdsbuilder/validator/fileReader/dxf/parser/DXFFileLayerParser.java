@@ -13,10 +13,11 @@ import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 
 public class DXFFileLayerParser {
 
+	@SuppressWarnings("unchecked")
 	public static DTLayerList parseDTLayer(String epsg, DXFLayer dxfLayer) throws Exception {
 
 		DTLayerList dtlayers = new DTLayerList();
-		Iterator typeIterator = dxfLayer.getDXFEntityTypeIterator();
+		Iterator<?> typeIterator = dxfLayer.getDXFEntityTypeIterator();
 		while (typeIterator.hasNext()) {
 			String type = (String) typeIterator.next();
 			String layerId = dxfLayer.getName();

@@ -26,7 +26,7 @@ public class DXFFileReader {
 		DXFDocument doc = parser.getDocument();
 		// readDXF
 		DTLayerList layerList = new DTLayerList();
-		Iterator layerIterator = doc.getDXFLayerIterator();
+		Iterator<?> layerIterator = doc.getDXFLayerIterator();
 		while (layerIterator.hasNext()) {
 			DXFLayer dxfLayer = (DXFLayer) layerIterator.next();
 			// String layerId = dxfLayer.getName();
@@ -63,7 +63,7 @@ public class DXFFileReader {
 		parser.parse(filePath, DXFParser.DEFAULT_ENCODING);
 		DXFDocument doc = parser.getDocument();
 		// readDXF
-		Iterator layerIterator = doc.getDXFLayerIterator();
+		Iterator<?> layerIterator = doc.getDXFLayerIterator();
 
 		DTLayerList layerList = new DTLayerList();
 

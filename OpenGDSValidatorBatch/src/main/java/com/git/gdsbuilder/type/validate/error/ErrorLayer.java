@@ -128,4 +128,11 @@ public class ErrorLayer {
 		this.collectionType = collectionType;
 	}
 
+	@Override
+	public String toString() {
+		return "ErrorLayer [layerName=" + layerName + ", collectionName=" + collectionName + ", errFeatureList="
+				+ errFeatureList + ", collectionType=" + collectionType + "]";
+	}
+	
+
 }

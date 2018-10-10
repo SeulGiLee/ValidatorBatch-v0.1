@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * @author DY.Oh
  * @date 2018. 2. 21. 오후 2:13:21
  */
+@SuppressWarnings("serial")
 public class FileMetaList extends ArrayList<FileMeta> {
 
 	String name;
@@ -36,7 +37,5 @@ public class FileMetaList extends ArrayList<FileMeta> {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
-	
 
 }

@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
 
 import org.geotools.data.DataUtilities;
 import org.geotools.data.simple.SimpleFeatureCollection;
@@ -55,7 +54,6 @@ import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.NoSuchAuthorityCodeException;
 import org.opengis.referencing.operation.TransformException;
 
-import com.git.batch.service.BathService;
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
 import com.git.gdsbuilder.type.dt.layer.DTLayerList;
@@ -74,9 +72,6 @@ import com.git.gdsbuilder.validator.feature.FeatureCloseCollectionValidatorImpl;
 import com.git.gdsbuilder.validator.feature.FeatureGraphicValidator;
 import com.git.gdsbuilder.validator.feature.FeatureGraphicValidatorImpl;
 import com.vividsolutions.jts.geom.Geometry;
-
-import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarStyle;
 
 public class LayerValidatorImpl implements LayerValidator {
 	DTLayer validatorLayer;

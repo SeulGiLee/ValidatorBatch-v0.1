@@ -25,6 +25,7 @@ import java.util.ArrayList;
  * @author DY.Oh
  * @Date 2017. 3. 11. 오후 1:32:25
  */
+@SuppressWarnings("serial")
 public class DTLayerList extends ArrayList<DTLayer> {
 
 	public DTLayer getDTLayer(String layerID) {

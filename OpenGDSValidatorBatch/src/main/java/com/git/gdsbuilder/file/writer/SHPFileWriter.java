@@ -2,6 +2,7 @@ package com.git.gdsbuilder.file.writer;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.geotools.feature.DefaultFeatureCollection;
 import org.geotools.feature.SchemaException;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.referencing.CRS;
-import org.geotools.util.logging.Logging;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.referencing.FactoryException;
@@ -41,7 +41,7 @@ public class SHPFileWriter {
 		FileDataStoreFactorySpi factory = new ShapefileDataStoreFactory();
 
 		File file = new File(filePath);
-		Map map = Collections.singletonMap("url", file.toURI().toURL());
+		Map<String, Serializable> map = Collections.singletonMap("url", file.toURI().toURL());
 		ShapefileDataStore myData = (ShapefileDataStore) factory.createNewDataStore(map);
 		SimpleFeatureType featureType = simpleFeatureCollection.getSchema();
 		myData.forceSchemaCRS(CRS.decode(epsg));
@@ -108,7 +108,7 @@ public class SHPFileWriter {
 
 			ShapefileDataStoreFactory factory = new ShapefileDataStoreFactory();
 			File file = new File(filePath);
-			Map map = Collections.singletonMap("url", file.toURI().toURL());
+			Map<String, Serializable> map = Collections.singletonMap("url", file.toURI().toURL());
 			ShapefileDataStore myData = (ShapefileDataStore) factory.createNewDataStore(map);
 			myData.setCharset(Charset.forName("EUC-KR"));
 			SimpleFeatureType featureType = collection.getSchema();

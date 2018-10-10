@@ -37,11 +37,9 @@ package com.git.gdsbuilder.validator.feature;
 import java.util.List;
 
 import org.geotools.data.simple.SimpleFeatureCollection;
-import org.json.simple.JSONObject;
 
 import com.git.gdsbuilder.type.dt.feature.DTFeature;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
-import com.git.gdsbuilder.type.dt.layer.DTLayerList;
 import com.git.gdsbuilder.type.validate.error.ErrorFeature;
 import com.git.gdsbuilder.type.validate.option.specific.AttributeFigure;
 import com.git.gdsbuilder.type.validate.option.specific.OptionFigure;

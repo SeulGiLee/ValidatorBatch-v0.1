@@ -558,7 +558,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 			}
 
 			Double value = optionTolerance.getValue();
-			String conditon = optionTolerance.getCondition();
+			// String conditon = optionTolerance.getCondition();
 
 			Geometry geom = (Geometry) sf.getDefaultGeometry();
 

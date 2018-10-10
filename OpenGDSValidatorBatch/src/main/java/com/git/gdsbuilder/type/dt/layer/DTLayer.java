@@ -23,7 +23,7 @@ public class DTLayer {
 	SimpleFeatureCollection simpleFeatureCollection;
 	OptionFilter filter;
 	MapSystemRule mapRule; // 인접도엽 정보
-
+	
 	public DTLayer(){}
 	public DTLayer(String layerID, String layerType, SimpleFeatureCollection typeFtCollection, OptionFilter filter,
 			MapSystemRule mapRule) {

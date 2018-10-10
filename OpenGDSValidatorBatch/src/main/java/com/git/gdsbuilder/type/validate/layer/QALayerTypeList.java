@@ -31,6 +31,7 @@ import com.git.gdsbuilder.type.validate.option.specific.OptionRelation;
  * @author DY.Oh
  * @Date 2017. 3. 11. 오후 3:02:56
  */
+@SuppressWarnings("serial")
 public class QALayerTypeList extends ArrayList<QALayerType> {
 
 	int category;
@@ -137,4 +138,5 @@ public class QALayerTypeList extends ArrayList<QALayerType> {
 		return layers;
 
 	}
+	
 }

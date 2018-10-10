@@ -52,7 +52,7 @@ public class QATypeParser {
 	JSONArray validateTypeArray;
 	QALayerTypeList validateLayerTypeList;
 
-	String comment;
+	String comment = "";
 
 	public QATypeParser(JSONArray validateTypeArray) {
 		this.validateTypeArray = validateTypeArray;
@@ -94,12 +94,13 @@ public class QATypeParser {
 					this.comment += "옵션 미존재" + "<br>";
 				}
 			} catch (Exception e) {
-				this.comment += "옵션 설정 오류" + "<br>";
+				this.comment += "레이어 정의 옵션과 검수 옵션이 연관되지 않습니다." + "<br>";
 				validateLayerTypeList = null;
 			}
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public QALayerType typeOptionParserT(JSONObject layerType) {
 
 		QALayerType type = new QALayerType();
@@ -157,7 +158,7 @@ public class QATypeParser {
 	private List<CloseMiss> parseCloseOption(JSONObject closeOption) {
 
 		List<CloseMiss> closeMisses = new ArrayList<>();
-		Iterator optionIter = closeOption.keySet().iterator();
+		Iterator<?> optionIter = closeOption.keySet().iterator();
 		while (optionIter.hasNext()) {
 			CloseMiss closeMiss = new CloseMiss();
 			String optionName = (String) optionIter.next();
@@ -215,7 +216,7 @@ public class QATypeParser {
 
 		List<GraphicMiss> graphicMisses = new ArrayList<>();
 
-		Iterator optionIter = grapOption.keySet().iterator();
+		Iterator<?> optionIter = grapOption.keySet().iterator();
 		while (optionIter.hasNext()) {
 			GraphicMiss graphicMiss = new GraphicMiss();
 			String optionName = (String) optionIter.next();
@@ -264,7 +265,7 @@ public class QATypeParser {
 
 		List<AttributeMiss> attributeMisses = new ArrayList<>();
 
-		Iterator optionIter = attrOption.keySet().iterator();
+		Iterator<?> optionIter = attrOption.keySet().iterator();
 		while (optionIter.hasNext()) {
 			AttributeMiss attributeMiss = new AttributeMiss();
 			String optionName = (String) optionIter.next();
@@ -429,6 +430,7 @@ public class QATypeParser {
 	 * @return List<AttributeFilter>
 	 * @decription
 	 */
+	@SuppressWarnings("unchecked")
 	private List<AttributeFilter> parseAttribute(JSONArray attribute) {
 
 		List<AttributeFilter> filters = new ArrayList<>();
@@ -450,7 +452,7 @@ public class QATypeParser {
 		}
 		return filters;
 	}
-
+	@SuppressWarnings("unchecked")
 	public List<OptionFigure> parseFigure(JSONArray figures) {
 
 		List<OptionFigure> optionFigureList = new ArrayList<>();

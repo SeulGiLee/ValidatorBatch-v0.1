@@ -94,7 +94,7 @@ public class DXFFileGeomParser {
 	}
 
 	// POLYLINE
-	public static Geometry parseDTLineString(String epsg, boolean isClosed, Iterator vertexIterator, int vertexCount)
+	public static Geometry parseDTLineString(String epsg, boolean isClosed, Iterator<?> vertexIterator, int vertexCount)
 			throws Exception {
 
 		GeometryFactory gf = new GeometryFactory();
@@ -135,7 +135,7 @@ public class DXFFileGeomParser {
 	}
 
 	// LWPOLYLINE
-	public static Geometry parseDT3DLineString(String epsg, boolean isClosed, Iterator vertexIterator, int vertexCount,
+	public static Geometry parseDT3DLineString(String epsg, boolean isClosed, Iterator<?> vertexIterator, int vertexCount,
 			double elevation) throws Exception {
 
 		GeometryFactory gf = new GeometryFactory();

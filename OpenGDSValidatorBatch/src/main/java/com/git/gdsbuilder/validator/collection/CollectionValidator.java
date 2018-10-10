@@ -116,6 +116,7 @@ public class CollectionValidator {
 		this.errLayer = new ErrorLayer();
 		this.progress = new HashMap<String, Object>();
 		collectionValidate();
+		
 	}
 
 	public static double getSpatialAccuracyTolorence() {
@@ -262,7 +263,7 @@ public class CollectionValidator {
 				int cate = types.getCategory();
 				ErrorLayer typeErrorLayer = null;
 				String layerID = typeLayer.getLayerID();
-				Iterator iterator = closeMap.keySet().iterator();
+				Iterator<?> iterator = closeMap.keySet().iterator();
 				while (iterator.hasNext()) {
 					MapSystemRuleType type = (MapSystemRuleType) iterator.next();
 					if (type == null) {
@@ -1756,7 +1757,7 @@ public class CollectionValidator {
 	}
 
 	private void layerMissValidate(QALayerTypeList types, DTLayerCollection layerCollection) throws SchemaException {
-		// TODO Auto-generated method stub
+
 		for (QALayerType type : types) {
 			QAOption options = type.getOption();
 			if (options != null) {

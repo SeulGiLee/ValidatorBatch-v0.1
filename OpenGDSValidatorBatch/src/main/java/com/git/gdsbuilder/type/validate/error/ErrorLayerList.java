@@ -24,6 +24,7 @@ import java.util.ArrayList;
  * @author DY.Oh
  * @Date 2017. 3. 11. 오후 3:02:40
  * */
+@SuppressWarnings("serial")
 public class ErrorLayerList extends ArrayList<ErrorLayer> {
 
 }

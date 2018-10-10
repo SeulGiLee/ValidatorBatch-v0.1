@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * @author DY.Oh
  * @date 2018. 3. 14. 오후 1:45:19
  */
+@SuppressWarnings("serial")
 public class QAOptionList extends ArrayList<QAOption> {
 
 }

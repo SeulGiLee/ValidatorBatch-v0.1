@@ -17,10 +17,7 @@
 
 package com.git.gdsbuilder.validator.fileReader.ngi.reader;
 
-import java.io.IOException;
 import java.util.logging.Level;
-
-import org.geotools.feature.SchemaException;
 
 import com.git.gdsbuilder.type.dt.collection.DTLayerCollection;
 import com.git.gdsbuilder.type.dt.layer.DTLayer;
