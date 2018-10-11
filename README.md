@@ -7,19 +7,30 @@
 ValidatorBatch-v0.1 (공간자료 검증 배치파일 v0.1) 
 =======
 이 프로젝트는 국토공간정보연구사업 중 [공간정보 SW 활용을 위한 오픈소스 가공기술 개발]과제의 5차년도 연구성과 입니다.<br>
-정식 버전은 차후에 통합된 환경에서 제공될 예정입니다.<br>
-이 프로그램들은 완성되지 않았으며, 최종 완료 전 까지 문제가 발생할 수도 있습니다.<br>
-발생된 문제는 최종 사용자에게 있으며, 완료가 된다면 제시된 라이선스 및 규약을 적용할 예정입니다.<br>
+로컬기반의 검수를 수행하기 위한 배치파일로써 [OpenGDS-Desktop-QgisPlugin](https://github.com/ODTBuilder/OpenGDS-Desktop-QgisPlugin) 검수를 지원하기 위해 개발되었다.
+배치파일은 3~4차년도 때 Web기반으로 개발된 공간정보 검수도구 Java Library 기반(OpenGDS/Validator)으로 개발되어 졌으며, Geoserver연동을 통한 검수가 아닌 로컬파일을 직접 읽어 검수함으로써 기존이슈였던 대용량 지원 및 고속검수를 목적으로 한다.<br>
+
 
 감사합니다.<br>
 공간정보기술(주) 연구소 <link>http://www.git.co.kr/<br>
 OpenGeoDT 팀
 
 
+
+Getting Started
+=====
+### 1. 환경 ###
+- Java - OpenGDK 1.8.0.111 64 bit
+
+### 2. 연동방법 ###
+ - 연동방법은 [배치파일_인터페이스설계서](https://github.com/ODTBuilder/ValidatorBatch-v0.1/blob/master/%EB%B0%B0%EC%B9%98%ED%8C%8C%EC%9D%BC_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%EC%84%A4%EA%B3%84%EC%84%9C.docx)를 참조하십시오.
+
+
 특징
 =====
 - QGIS 플러그인에서 Java 클래스를 외부에서 호출이 가능하게 Batch 파일로 연동합니다. 
 - 검수 내용은 [공간자료 검증도구v1.0](https://github.com/ODTBuilder/Validator-v1.0) 에 의거합니다.
+
 
 
 파라미터
@@ -51,12 +62,6 @@ OpenGeoDT 팀
 =====
 - 세부 책임 : 부산대학교 <link>http://www.pusan.ac.kr/<br>
 - 연구 책임 : 국토연구원 <link>http://www.krihs.re.kr/
-
-
-Getting Started
-=====
-### 1. 환경 ###
-- Java - OpenGDK 1.8.0.111 64 bit
 
 
 Mail
