@@ -1,6 +1,5 @@
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 [![Korean](https://img.shields.io/badge/language-Korean-blue.svg)](#korean)
-[![Englsh](https://img.shields.io/badge/language-English-orange.svg)](#english)
 
 
 <a name="korean"></a>
