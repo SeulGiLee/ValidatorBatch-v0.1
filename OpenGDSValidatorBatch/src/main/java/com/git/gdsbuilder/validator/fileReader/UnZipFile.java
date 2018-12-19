@@ -72,7 +72,7 @@ public class UnZipFile {
 			// 파일 스트림
 			fis = new FileInputStream(zipFile);
 			// Zip 파일 스트림
-			zis = new ZipInputStream(new BufferedInputStream(fis, BUFFER_SIZE), Charset.forName("Cp437"));
+			zis = new ZipInputStream(new BufferedInputStream(fis, BUFFER_SIZE), Charset.forName("euc-kr"));
 			// Fentry가 없을때까지 뽑기
 			while ((zipentry = zis.getNextEntry()) != null) {
 				String zipentryName = zipentry.getName();

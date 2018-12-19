@@ -590,7 +590,7 @@ public class NGIFileFeatureParser {
 		int j = 1;
 		String temp = "";
 
-		Iterator iterator = properties.keySet().iterator();
+		Iterator<?> iterator = properties.keySet().iterator();
 		while (iterator.hasNext()) {
 			String key = iterator.next().toString();
 			if (key.equals("the_geom")) {

@@ -30,5 +30,11 @@ public class AttributeFilter {
 	public void setValues(List<Object> values) {
 		this.values = values;
 	}
+	@Override
+	public String toString() {
+		return "AttributeFilter [key=" + key + ", values=" + values + "]";
+	}
+	
+	
 
 }

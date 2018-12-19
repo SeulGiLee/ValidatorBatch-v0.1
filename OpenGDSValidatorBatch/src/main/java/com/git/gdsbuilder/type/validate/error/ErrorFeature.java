@@ -34,6 +34,14 @@ public class ErrorFeature {
 	String errName;
 	String comment;
 	Geometry errPoint;
+	
+	
+
+	@Override
+	public String toString() {
+		return "ErrorFeature [layerID=" + layerID + ", featureID=" + featureID + ", errType=" + errType + ", errName="
+				+ errName + ", comment=" + comment + ", errPoint=" + errPoint + "]";
+	}
 
 	public ErrorFeature(){}
 	

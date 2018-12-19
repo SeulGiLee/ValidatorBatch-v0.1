@@ -3,6 +3,7 @@ package com.git.batch.service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
 import org.geotools.feature.SchemaException;
@@ -43,43 +45,48 @@ import com.git.gdsbuilder.type.validate.error.ErrorLayer;
 import com.git.gdsbuilder.type.validate.layer.QALayerTypeList;
 import com.git.gdsbuilder.validator.collection.CollectionValidator;
 import com.git.gdsbuilder.validator.fileReader.UnZipFile;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 public class BathService {
 
-	private static final String QA1DEFDIR;
-	private static final String QA2DEFDIR;
-	private static final String NM1LAYERDEF;
-	private static final String NM5LAYERDEF;
-	private static final String NM25LAYERDEF;
-	private static final String UG1LAYERDEF;
-	private static final String UG5LAYERDEF;
-	private static final String UG25LAYERDEF;
-	private static final String FR1LAYERDEF;
-	private static final String FR5LAYERDEF;
-	private static final String FR25LAYERDEF;
-	private static final String NM1OPTIONDEF;
-	private static final String NM5OPTIONDEF;
-	private static final String NM25OPTIONDEF;
-	private static final String UG1OPTIONDEF;
-	private static final String UG5OPTIONDEF;
-	private static final String UG25OPTIONDEF;
-	private static final String FR1OPTIONDEF;
-	private static final String FR5OPTIONDEF;
-	private static final String FR25OPTIONDEF;
+	private final String QA1DEFDIR;
+	private final String QA2DEFDIR;
+	private final String NM1LAYERDEF;
+	private final String NM5LAYERDEF;
+	private final String NM25LAYERDEF;
+	private final String UG1LAYERDEF;
+	private final String UG5LAYERDEF;
+	private final String UG25LAYERDEF;
+	private final String FR1LAYERDEF;
+	private final String FR5LAYERDEF;
+	private final String FR25LAYERDEF;
+	private final String NM1OPTIONDEF;
+	private final String NM5OPTIONDEF;
+	private final String NM25OPTIONDEF;
+	private final String UG1OPTIONDEF;
+	private final String UG5OPTIONDEF;
+	private final String UG25OPTIONDEF;
+	private final String FR1OPTIONDEF;
+	private final String FR5OPTIONDEF;
+	private final String FR25OPTIONDEF;
 
 	public static int totalValidSize = 0;
 	public static Progress pb;
 
-	static {
+	{
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		Properties properties = new Properties();
+		
 		try {
-			properties.load(classLoader.getResourceAsStream("batch.properties"));
+			InputStream inputStream = classLoader.getResourceAsStream("batch.properties");
+			properties.load(inputStream);
+			inputStream.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
 		QA1DEFDIR = properties.getProperty("qa1DefDir");
 		QA2DEFDIR = properties.getProperty("qa2DefDir");
 
@@ -105,19 +112,33 @@ public class BathService {
 	}
 
 	// file dir
-	protected static String ERR_OUTPUT_DIR;
-	protected static String ERR_FILE_DIR;
-	protected static String ERR_OUTPUT_NAME;
-	protected static String ERR_ZIP_DIR;
+	protected String ERR_OUTPUT_DIR;
+	protected String ERR_FILE_DIR;
+	protected String ERR_OUTPUT_NAME;
+	protected String ERR_ZIP_DIR;
 
 	// qa progress
-	protected static int fileUpload = 1;
-	protected static int validateProgresing = 2;
-	protected static int validateSuccess = 3;
-	protected static int validateFail = 4;
+	protected int fileUpload = 1;
+	protected int validateProgresing = 2;
+	protected int validateSuccess = 3;
+	protected int validateFail = 4;
 
 	Logger logger = LoggerFactory.getLogger(BathService.class);
 
+	/**
+	 * @param baseDir 최상위 폴더
+	 * @param valType 검수타입(수치지도, 지하시설물, 임상도)
+	 * @param pFlag 기존옵션여부
+	 * @param valDType 검수 세부타입(정위치, 구조화)
+	 * @param fileType 파일타입(dxf, ngi, shp)
+	 * @param category 옵션타입(1 - 수치지도1.0, 2 - 수치지도 2.0, 3 - 지하시설물 1.0, 4 - 지하시설물 2.0, 5 - 임상도)
+	 * @param layerDefPath 레이어 정의 옵션 경로
+	 * @param valOptPath 검수 옵션경로
+	 * @param objFilePath 검수 대상파일 경로
+	 * @param crs 좌표계
+	 * @return
+	 * @throws Throwable
+	 */
 	@SuppressWarnings("unchecked")
 	public boolean validate(String baseDir, String valType, String pFlag, String valDType, String fileType,
 			int category, String layerDefPath, String valOptPath, String objFilePath, String crs) throws Throwable {
@@ -223,12 +244,12 @@ public class BathService {
 
 		// 옵션또는 파일이 제대로 넘어오지 않았을때 강제로 예외발생
 		if (qaVer == null || qaType == null || prid == null) {
-//			logger.info("다시 요청해주세요.");
+			// logger.info("다시 요청해주세요.");
 			System.out.println("다시 요청해주세요.");
 			return isSuccess;
 		} else if (fileformat == null) {
 			System.out.println("파일포맷을 설정해주세요.");
-//			logger.info("파일포맷을 설정해주세요.");
+			// logger.info("파일포맷을 설정해주세요.");
 			return isSuccess;
 		} else {
 			long time = System.currentTimeMillis();
@@ -250,21 +271,20 @@ public class BathService {
 			unZipFile.decompress(new File(objFilePath), cIdx);
 			totalValidSize = unZipFile.getTotalSize();
 			String comment = unZipFile.getFileState();
-			
-			/*  #####################################
-			 *  yhg
-			 *  적어도 해당 파일 형식이 한 개는 있는지 검사
+
+			/*
+			 * 적어도 해당 파일 형식이 한 개는 있는지 검사
 			 */
 			boolean checkExt = false;
-			if(unZipFile.isFiles()) {			
+			if (unZipFile.isFiles()) {
 				FileMetaList fList = unZipFile.getFileMetaList();
 				for (FileMeta fMeta : fList) {
-					if(fMeta.getFileName().endsWith(fileType)) {
+					if (fMeta.getFileName().endsWith(fileType)) {
 						checkExt = true;
 						break;
 					}
 				}
-			} else if(unZipFile.isDir()){
+			} else if (unZipFile.isDir()) {
 				Map<String, FileMetaList> dirMetaList = unZipFile.getDirMetaList();
 				Iterator<?> dirIterator = dirMetaList.keySet().iterator();
 				while (dirIterator.hasNext()) {
@@ -278,13 +298,11 @@ public class BathService {
 					}
 				}
 			}
-			if(!checkExt) {
+			if (!checkExt) {
 				System.out.println("검수 대상 파일에 " + fileType + "가 존재하지 않습니다.");
 				throw new Throwable();
 			}
 			// #####################################
-
-			
 
 			// option parsing
 			JSONParser jsonP = new JSONParser();
@@ -297,12 +315,11 @@ public class BathService {
 				throw new Throwable();
 			}
 			try {
-				layers = (JSONArray) ((Object) jsonP.parse(new FileReader(layerDefPath)));				
+				layers = (JSONArray) ((Object) jsonP.parse(new FileReader(layerDefPath)));
 			} catch (ClassCastException e) {
 				System.out.println("잘못된 레이어 정의 파일입니다.");
 				throw new Throwable();
 			}
-			
 
 			Object neatLine = option.get("border");
 			String neatLineCode = null;
@@ -310,7 +327,6 @@ public class BathService {
 				JSONObject neatLineObj = (JSONObject) neatLine;
 				neatLineCode = (String) neatLineObj.get("code");
 			}
-			
 
 			// files
 			QAFileParser parser = new QAFileParser(epsg, cIdx, support, unZipFile, neatLineCode);
@@ -318,7 +334,7 @@ public class BathService {
 			if (!parseTrue) {
 				comment += parser.getFileState();
 				if (!comment.equals("")) {
-//					logger.info(comment);
+					// logger.info(comment);
 					System.out.println(comment);
 				}
 				deleteDirectory(tmpBasedir.toFile());
@@ -330,7 +346,7 @@ public class BathService {
 				// 파일 다 에러
 				comment += parser.getFileState();
 				if (!comment.equals("")) {
-//					logger.info(comment);
+					// logger.info(comment);
 					System.out.println(comment);
 				}
 				deleteDirectory(tmpBasedir.toFile());
@@ -339,7 +355,7 @@ public class BathService {
 				// 몇개만 에러
 				comment += parser.getFileState();
 				if (!comment.equals("")) {
-//					logger.info(comment);
+					// logger.info(comment);
 					System.out.println(comment);
 				}
 			}
@@ -369,7 +385,7 @@ public class BathService {
 			if (validateLayerTypeList == null) {
 				comment += validateTypeParser.getComment();
 				if (!comment.equals("")) {
-//					logger.info(comment);
+					// logger.info(comment);
 					System.out.println(comment);
 				}
 				deleteDirectory(tmpBasedir.toFile());
@@ -389,7 +405,7 @@ public class BathService {
 			// excute validation
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg);
 			if (isSuccess) {
-//				logger.info("검수 요청이 성공적으로 완료되었습니다.");
+				// logger.info("검수 요청이 성공적으로 완료되었습니다.");
 				System.out.println("검수 요청이 성공적으로 완료되었습니다.");
 				// zip err shp directory
 				/*
@@ -398,7 +414,7 @@ public class BathService {
 				 */
 			} else {
 				// insert validate state
-//				logger.info("검수 요청이 실패했습니다.");
+				// logger.info("검수 요청이 실패했습니다.");
 				System.out.println("검수 요청이 실패했습니다.");
 			}
 			validateTypeParser = null;
@@ -411,7 +427,7 @@ public class BathService {
 		}
 	}
 
-	public static void showProgress() {
+	public void showProgress() {
 
 	}
 
@@ -435,8 +451,8 @@ public class BathService {
 
 		// 도엽별 검수 쓰레드 생성
 		List<Future<?>> futures = new ArrayList<>();
-		ExecutorService execService = Executors.newFixedThreadPool(3);
-//		ExecutorService execService = Executors.newCachedThreadPool();
+		ExecutorService execService = Executors.newFixedThreadPool(3,
+				new ThreadFactoryBuilder().setNameFormat("도엽별 검수-%d").build());
 
 		pb = new Progress();
 		for (final DTLayerCollection collection : collectionList) {
@@ -484,7 +500,6 @@ public class BathService {
 		execService.shutdown();
 		pb.terminate();
 		// System.out.println("검수가 완료되었습니다.");
-
 		return futureCount == collectionList.size();
 	}
 
@@ -592,7 +607,7 @@ public class BathService {
 	 *            void
 	 */
 	@SuppressWarnings("unused")
-	private static void subDirList(String source) {
+	private void subDirList(String source) {
 		File dir = new File(source);
 
 		File[] fileList = dir.listFiles();
@@ -659,7 +674,7 @@ public class BathService {
 	 * @param unzipFolder
 	 *            void
 	 */
-	// private static File[] createCollectionFolders(File unzipFolder) {
+	// private File[] createCollectionFolders(File unzipFolder) {
 	// boolean equalFlag = false; // 파일명이랑 압축파일명이랑 같을시 대비 flag값
 	// String unzipName = unzipFolder.getName();
 	//
@@ -748,8 +763,7 @@ public class BathService {
 	 * @param afterFilePath
 	 * @return String
 	 */
-	private static String moveDirectory(String folderName, String fileName, String beforeFilePath,
-			String afterFilePath) {
+	private String moveDirectory(String folderName, String fileName, String beforeFilePath, String afterFilePath) {
 		String path = afterFilePath + "/" + folderName;
 		String filePath = path + "/" + fileName;
 
@@ -783,7 +797,7 @@ public class BathService {
 	 * @throws IOException
 	 *             void
 	 */
-	private static void FileNio2Copy(String source, String dest) throws IOException {
+	private void FileNio2Copy(String source, String dest) throws IOException {
 		Files.copy(new File(source).toPath(), new File(dest).toPath());
 	}
 

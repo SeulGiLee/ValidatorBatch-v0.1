@@ -73,6 +73,7 @@ import com.git.gdsbuilder.type.validate.option.standard.FixedValue;
 import com.git.gdsbuilder.type.validate.option.standard.LayerFixMiss;
 import com.git.gdsbuilder.validator.layer.LayerValidator;
 import com.git.gdsbuilder.validator.layer.LayerValidatorImpl;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 
 /**
  * ValidateLayerCollectionList를 검수하는 클래스
@@ -239,7 +240,7 @@ public class CollectionValidator {
 			closeMap.put(MapSystemRuleType.RIGHT, rightGeoCollection);
 			isTrue = true;
 		}
-		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		ExecutorService executorService = Executors.newFixedThreadPool(5, new ThreadFactoryBuilder().setNameFormat("CollectionValidator.인접검수-%d").build());
 		CloseCollectionResult closeCollectionResult = new CloseCollectionResult();
 
 		class Task implements Runnable {
@@ -564,7 +565,7 @@ public class CollectionValidator {
 
 		DTLayer neatLayer = layerCollection.getNeatLine();
 
-		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		ExecutorService executorService = Executors.newFixedThreadPool(5, new ThreadFactoryBuilder().setNameFormat("CollectionValidator.attribute 검수-%d").build());
 		AttResult attrResult = new AttResult();
 
 		class Task implements Runnable {
@@ -882,7 +883,7 @@ public class CollectionValidator {
 
 		DTLayer neatLayer = layerCollection.getNeatLine();
 
-		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		ExecutorService executorService = Executors.newFixedThreadPool(5, new ThreadFactoryBuilder().setNameFormat("CollectionValidator.geometric 검수-%d").build());
 		GeometricResult geometricResult = new GeometricResult();
 
 		class Task implements Runnable {
@@ -1739,7 +1740,8 @@ public class CollectionValidator {
 				}
 				for (Future<GeometricResult> future : futures) {
 					try {
-						geometricResult = future.get();
+						
+						geometricResult = future.get();							
 						if (geo_ < futures.size()){
 							BathService.pb.updateProgress();
 							geo_++;

@@ -31,6 +31,12 @@ public class FileMeta {
 
 	boolean isTrue;
 
+	@Override
+	public String toString() {
+		return "FileMeta [fileName=" + fileName + ", filePath=" + filePath + ", fileType=" + fileType + ", isTrue="
+				+ isTrue + "]";
+	}
+
 	public String getFileName() {
 		return fileName;
 	}

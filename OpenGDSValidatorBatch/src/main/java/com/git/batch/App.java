@@ -16,17 +16,19 @@ import com.git.batch.service.BathService;
 public class App {
 	
 	static Logger logger = LoggerFactory.getLogger(App.class);
-	static final BathService service = new BathService();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
+		
+		BathService service = new BathService();
 		boolean flag = false;
 		System.out.println("\n검수를 진행합니다.");
 		
 		BatchArgs params = new BatchArgs();
 		JCommander cmd = new JCommander(params);
+		
  
 		try { // Parse given arguments
-			cmd.parse(args);
+			cmd.parse(args);			
 			
 			String baseDir = params.getBaseDir();
 			String valType = params.getValType();
@@ -43,21 +45,23 @@ public class App {
 				flag = service.validate(baseDir, valType, pFlag, valDType, fileType, category, layerDefPath, valOptPath,
 						objFilePath, crs);
 				if (flag) {
-//					logger.warn("요청 성공");
 					System.out.println("요청 성공");
+					System.exit(200);
 				} else {
-//					logger.info("요청 실패");
 					System.out.println("요청 실패");
+					System.exit(500);
 				}
 			} catch (Throwable e) {
 				// TODO Auto-generated catch block
-//				logger.info("요청 실패");
+				System.out.println(e.toString());
 				System.out.println("요청 실패");
+				System.exit(500);
 			}
 
 		} catch (ParameterException e) {
 			JCommander.getConsole().println(e.toString());
 			cmd.usage();
+			System.exit(500);
 		}
 	}
 }

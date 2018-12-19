@@ -1,12 +1,17 @@
 package com.git.batch.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 
 /**
  *
  * @author SG.Lee
  * @Date 2018. 5. 4. 오전 10:10:42
  * */
+@Parameters(separators = "=")
 public class BatchArgs {
 	
 	public static final String BASEDIR = "--basedir";
@@ -34,16 +39,18 @@ public class BatchArgs {
 	private String cIdx=""; 
 
 	public static final String LAYERDEFPATH = "--layerdefpath";
-	@Parameter(names = LAYERDEFPATH, description = "레이어 정의 옵션 경로", required = true)
-	private String layerDefPath="";
+	@Parameter(names = LAYERDEFPATH, description = "레이어 정의 옵션 경로", required = true, variableArity=true)
+	private List<String> layerDefPath = new ArrayList<>();
 	
 	public static final String VALOPTPATH = "--valoptpath";
-	@Parameter(names = VALOPTPATH, description = "검수 옵션경로", required = true)
-	private String valOptPath="";
+	@Parameter(names = VALOPTPATH, description = "검수 옵션경로", required = true, variableArity=true)
+	private List<String> valOptPath = new ArrayList<>();
+//	private String valOptPath="";
 	
 	public static final String OBJFILEPATH = "--objfilepath";
-	@Parameter(names = OBJFILEPATH, description = "검수 대상파일 경로", required = true)
-	private String objFilePath="";
+	@Parameter(names = OBJFILEPATH, description = "검수 대상파일 경로", required = true, variableArity=true)
+	private List<String> objFilePath = new ArrayList<>();
+//	private String objFilePath="";
 	
 	public static final String CRS = "--crs";
 	@Parameter(names = CRS, description = "좌표계", required = true)
@@ -81,21 +88,21 @@ public class BatchArgs {
 		this.fileType = fileType;
 	}
 	public String getLayerDefPath() {
-		return layerDefPath;
+		return parsingSpace(this.layerDefPath);
 	}
-	public void setLayerDefPath(String layerDefPath) {
+	public void setLayerDefPath(List<String> layerDefPath) {
 		this.layerDefPath = layerDefPath;
 	}
 	public String getValOptPath() {
-		return valOptPath;
+		return parsingSpace(this.valOptPath);
 	}
-	public void setValOptPath(String valOptPath) {
+	public void setValOptPath(List<String> valOptPath) {
 		this.valOptPath = valOptPath;
 	}
 	public String getObjFilePath() {
-		return objFilePath;
+		return parsingSpace(this.objFilePath);
 	}
-	public void setObjFilePath(String objFilePath) {
+	public void setObjFilePath(List<String> objFilePath) {
 		this.objFilePath = objFilePath;
 	}
 	public String getpFlag() {
@@ -131,6 +138,18 @@ public class BatchArgs {
 	}
 	public void setCrs(String crs) {
 		this.crs = crs;
+	}
+	
+	public String parsingSpace(List<String> paths) {
+		String res = "";
+		for (int i = 0; i < paths.size(); i++) {
+			if(i == 0) {
+				res += paths.get(i);
+				continue;
+			}
+			res += " " + paths.get(i);
+		}
+		return res;
 	}
 	
 }

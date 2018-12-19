@@ -610,11 +610,12 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 
 	@Override
 	public List<ErrorFeature> validateSelfEntity(DTFeature dtFeature, DTFeature reFeature, OptionTolerance tolerance) {
-
+		
 		boolean isTrue = false;
 		SimpleFeature sf = dtFeature.getSimefeature();
 
 		List<AttributeFilter> filters = dtFeature.getFilter();
+
 		if (filters != null) {
 			isTrue = FeatureFilter.filter(sf, filters);
 		} else {
@@ -685,7 +686,7 @@ public class FeatureGraphicValidatorImpl implements FeatureGraphicValidator {
 					}
 				}
 			}
-		}
+		}		
 		if (errFeatures.size() > 0) {
 			return errFeatures;
 		} else {

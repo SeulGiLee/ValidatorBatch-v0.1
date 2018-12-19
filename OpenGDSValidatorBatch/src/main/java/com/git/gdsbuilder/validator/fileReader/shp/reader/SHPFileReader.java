@@ -71,11 +71,12 @@ public class SHPFileReader {
 		}
 		return isValid;
 	}
-
+/*
 	private String getFileName(String filePath) {
 		String[] splitArr = filePath.split("\\\\");
 		String fileName = splitArr[splitArr.length - 1];
 		int pos = fileName.lastIndexOf(".");
 		return fileName.substring(0, pos);
 	}
+*/
 }

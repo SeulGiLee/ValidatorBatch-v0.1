@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 /**
  * @className DownloadValidateFile.java
@@ -28,6 +27,7 @@ public class DownloadValidateFile {
 		HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
 
 		int responseCode = httpConn.getResponseCode();
+		
 		if (responseCode == HttpURLConnection.HTTP_OK) {
 			String fileName = "";
 			String disposition = httpConn.getHeaderField("Content-Disposition");
@@ -47,11 +47,13 @@ public class DownloadValidateFile {
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
 				outputStream.write(buffer, 0, bytesRead);
 			}
+			httpConn.disconnect();
 			outputStream.close();
 			inputStream.close();
 			return true;
 		} else {
 			return false;
 		}
+		
 	}
 }
