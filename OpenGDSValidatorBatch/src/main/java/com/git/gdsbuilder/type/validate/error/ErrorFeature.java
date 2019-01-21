@@ -30,31 +30,55 @@ public class ErrorFeature {
 
 	String layerID;
 	String featureID;
+
+	String refLayerId;
+	String refFeatureId;
+
+	String errCode;
 	String errType;
 	String errName;
 	String comment;
 	Geometry errPoint;
-	
-	
 
-	@Override
-	public String toString() {
-		return "ErrorFeature [layerID=" + layerID + ", featureID=" + featureID + ", errType=" + errType + ", errName="
-				+ errName + ", comment=" + comment + ", errPoint=" + errPoint + "]";
-	}
-
-	public ErrorFeature(){}
-	
-	public ErrorFeature(String featureID, String errType, String errName, String comment, Geometry errPoint) {
+	public ErrorFeature(String featureID, String errCode, String errType, String errName, String comment,
+			Geometry errPoint) {
 		super();
 		this.layerID = "";
 		this.featureID = featureID;
+		this.errCode = errCode;
 		this.errType = errType;
 		this.errName = errName;
 		this.comment = comment;
 		this.errPoint = errPoint;
 	}
 
+	public ErrorFeature(String featureID, String refLayerId, String refFeatureId, String errCode, String errType,
+			String errName, String comment, Geometry errPoint) {
+		super();
+		this.layerID = "";
+		this.featureID = featureID;
+		this.refLayerId = refLayerId;
+		this.refFeatureId = refFeatureId;
+		this.errCode = errCode;
+		this.errType = errType;
+		this.errName = errName;
+		this.comment = comment;
+		this.errPoint = errPoint;
+	}
+
+	public ErrorFeature(String featureID, String refFeatureId, String errCode, String errType, String errName,
+			String comment, Geometry errPoint) {
+		super();
+		this.layerID = "";
+		this.featureID = featureID;
+		this.refFeatureId = refFeatureId;
+		this.errCode = errCode;
+		this.errType = errType;
+		this.errName = errName;
+		this.comment = comment;
+		this.errPoint = errPoint;
+	}
+	
 	public String getLayerID() {
 		return layerID;
 	}
@@ -69,6 +93,30 @@ public class ErrorFeature {
 
 	public void setFeatureID(String featureID) {
 		this.featureID = featureID;
+	}
+
+	public String getRefLayerId() {
+		return refLayerId;
+	}
+
+	public void setRefLayerId(String refLayerId) {
+		this.refLayerId = refLayerId;
+	}
+
+	public String getRefFeatureId() {
+		return refFeatureId;
+	}
+
+	public void setRefFeatureId(String refFeatureId) {
+		this.refFeatureId = refFeatureId;
+	}
+
+	public String getErrCode() {
+		return errCode;
+	}
+
+	public void setErrCode(String errCode) {
+		this.errCode = errCode;
 	}
 
 	public String getErrType() {
@@ -102,6 +150,5 @@ public class ErrorFeature {
 	public void setErrPoint(Geometry errPoint) {
 		this.errPoint = errPoint;
 	}
-	
-}
 
+}

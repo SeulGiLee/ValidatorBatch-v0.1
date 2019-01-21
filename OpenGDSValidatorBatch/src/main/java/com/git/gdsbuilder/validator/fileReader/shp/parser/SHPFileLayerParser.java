@@ -17,6 +17,48 @@ import com.git.gdsbuilder.type.dt.layer.DTLayer;
 
 public class SHPFileLayerParser {
 
+	public DTLayer parseDTLayer(String epsg, File file) throws Exception {
+
+		String fileName = file.getName();
+		int Idx = fileName.lastIndexOf(".");
+		String layerName = fileName.substring(0, Idx);
+		SimpleFeatureCollection collection = getShpObject(epsg, file, layerName);
+		if (collection != null) {
+			DTLayer layer = new DTLayer();
+			SimpleFeatureType featureType = collection.getSchema();
+			GeometryType geometryType = featureType.getGeometryDescriptor().getType();
+			String geomType = geometryType.getBinding().getSimpleName().toString();
+			layer.setLayerID(layerName);
+			layer.setLayerType(geomType);
+			layer.setSimpleFeatureCollection(collection);
+			return layer;
+		} else {
+			return null;
+		}
+	}
+
+	public SimpleFeatureCollection getShpObject(String epsg, File file, String shpName) {
+
+		ShapefileDataStore beforeStore = null;
+		SimpleFeatureCollection collection = null;
+		try {
+			Map<String, Object> beforeMap = new HashMap<String, Object>();
+			beforeMap.put("url", file.toURI().toURL());
+			beforeStore = (ShapefileDataStore) DataStoreFinder.getDataStore(beforeMap);
+			Charset euckr = Charset.forName("EUC-KR");
+			beforeStore.setCharset(euckr);
+			String typeName = beforeStore.getTypeNames()[0];
+			SimpleFeatureSource source = beforeStore.getFeatureSource(typeName);
+			Filter filter = Filter.INCLUDE;
+			collection = source.getFeatures(filter);
+			beforeStore.dispose();
+			beforeStore = null;
+		} catch (Exception e) {
+			return null;
+		}
+		return collection;
+	}
+
 	public DTLayer parseDTLayer(String epsg, String filePath, String shpName) throws Exception {
 
 		SimpleFeatureCollection collection = getShpObject(epsg, filePath, shpName);
@@ -38,7 +80,7 @@ public class SHPFileLayerParser {
 
 	public SimpleFeatureCollection getShpObject(String epsg, String filePath, String shpName) {
 
-		ShapefileDataStore beforeStore;
+		ShapefileDataStore beforeStore = null;
 		try {
 			// before
 			File beforeFile = new File(filePath);
@@ -46,38 +88,19 @@ public class SHPFileLayerParser {
 				beforeFile = new File(filePath, shpName + ".shp");
 			}
 			Map<String, Object> beforeMap = new HashMap<String, Object>();
-//			System.out.println(beforeFile.toURI().toURL().toString());
-			beforeMap.put("url", beforeFile.toURI().toURL().toString());
+			beforeMap.put("url", beforeFile.toURI().toURL());
 			beforeStore = (ShapefileDataStore) DataStoreFinder.getDataStore(beforeMap);
 			Charset euckr = Charset.forName("EUC-KR");
 			beforeStore.setCharset(euckr);
 			String typeName = beforeStore.getTypeNames()[0];
 			SimpleFeatureSource source = beforeStore.getFeatureSource(typeName);
 			Filter filter = Filter.INCLUDE;
-			
-			
-			
 			SimpleFeatureCollection collection = source.getFeatures(filter);
-
-			// CoordinateReferenceSystem dataCRS = CRS.decode(epsg);
-			// CoordinateReferenceSystem worldCRS = CRS.decode("EPSG:32652");
-			// MathTransform transform = CRS.findMathTransform(dataCRS,
-			// worldCRS);
-			//
-			// DefaultFeatureCollection dfc = new DefaultFeatureCollection();
-			// SimpleFeatureIterator sfi = collection.features();
-			// while (sfi.hasNext()) {
-			// SimpleFeature sf = sfi.next();
-			// Geometry beforeGeom = (Geometry) sf.getDefaultGeometry();
-			// Geometry afterGeom = JTS.transform(beforeGeom, transform);
-			// sf.setDefaultGeometry(afterGeom);
-			// dfc.add(sf);
-			// }
-			// sfi.close();
 			beforeStore.dispose();
+			beforeStore = null;
+			source = null;
 			return collection;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

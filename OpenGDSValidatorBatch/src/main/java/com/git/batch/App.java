@@ -21,7 +21,9 @@ public class App {
 		
 		BathService service = new BathService();
 		boolean flag = false;
-		System.out.println("\n검수를 진행합니다.");
+//		System.out.println("\n검수를 진행합니다.");
+		System.out.println("\nVerification is in progress.");
+		
 		
 		BatchArgs params = new BatchArgs();
 		JCommander cmd = new JCommander(params);
@@ -45,16 +47,19 @@ public class App {
 				flag = service.validate(baseDir, valType, pFlag, valDType, fileType, category, layerDefPath, valOptPath,
 						objFilePath, crs);
 				if (flag) {
-					System.out.println("요청 성공");
+//					System.out.println("요청 성공");
+					System.out.println("Request successful");
 					System.exit(200);
 				} else {
-					System.out.println("요청 실패");
+//					System.out.println("요청 실패");
+					System.out.println("Request failed");
 					System.exit(500);
 				}
 			} catch (Throwable e) {
 				// TODO Auto-generated catch block
 				System.out.println(e.toString());
-				System.out.println("요청 실패");
+//				System.out.println("요청 실패");
+				System.out.println("Request failed");
 				System.exit(500);
 			}
 

@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 
 import org.geotools.feature.SchemaException;
@@ -245,10 +244,12 @@ public class BathService {
 		// 옵션또는 파일이 제대로 넘어오지 않았을때 강제로 예외발생
 		if (qaVer == null || qaType == null || prid == null) {
 			// logger.info("다시 요청해주세요.");
-			System.out.println("다시 요청해주세요.");
+//			System.out.println("다시 요청해주세요.");
+			System.out.println("Please request again.");
 			return isSuccess;
 		} else if (fileformat == null) {
-			System.out.println("파일포맷을 설정해주세요.");
+//			System.out.println("파일포맷을 설정해주세요.");
+			System.out.println("Please set the file format.");
 			// logger.info("파일포맷을 설정해주세요.");
 			return isSuccess;
 		} else {
@@ -299,7 +300,8 @@ public class BathService {
 				}
 			}
 			if (!checkExt) {
-				System.out.println("검수 대상 파일에 " + fileType + "가 존재하지 않습니다.");
+//				System.out.println("검수 대상 파일에 " + fileType + "가 존재하지 않습니다.");
+				System.out.println(fileType + " does not exist in the target file.");
 				throw new Throwable();
 			}
 			// #####################################
@@ -311,13 +313,15 @@ public class BathService {
 			try {
 				option = (JSONObject) ((Object) jsonP.parse(new FileReader(valOptPath)));
 			} catch (ClassCastException e) {
-				System.out.println("잘못된 옵션 파일입니다.");
+//				System.out.println("잘못된 옵션 파일입니다.");
+				System.out.println("Invalid option file");
 				throw new Throwable();
 			}
 			try {
 				layers = (JSONArray) ((Object) jsonP.parse(new FileReader(layerDefPath)));
 			} catch (ClassCastException e) {
-				System.out.println("잘못된 레이어 정의 파일입니다.");
+//				System.out.println("잘못된 레이어 정의 파일입니다.");
+				System.out.println("Invalid layer definition file.");
 				throw new Throwable();
 			}
 
@@ -406,7 +410,8 @@ public class BathService {
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg);
 			if (isSuccess) {
 				// logger.info("검수 요청이 성공적으로 완료되었습니다.");
-				System.out.println("검수 요청이 성공적으로 완료되었습니다.");
+//				System.out.println("검수 요청이 성공적으로 완료되었습니다.");
+				System.out.println("Validation request completed successfully.");
 				// zip err shp directory
 				/*
 				 * zipFileDirectory(); InputStream inputStream = new
@@ -415,7 +420,8 @@ public class BathService {
 			} else {
 				// insert validate state
 				// logger.info("검수 요청이 실패했습니다.");
-				System.out.println("검수 요청이 실패했습니다.");
+//				System.out.println("검수 요청이 실패했습니다.");
+				System.out.println("Validation request failed.");
 			}
 			validateTypeParser = null;
 			validateLayerTypeList = null;

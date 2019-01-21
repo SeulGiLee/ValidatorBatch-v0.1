@@ -506,6 +506,7 @@ public class LayerValidatorImpl implements LayerValidator {
 
 			@Override
 			public void run() {
+				System.out.println(dtFeature.getSimefeature().getAttribute("osm_id"));
 				for (int j = this.index; j < reDtFeatureList.size(); j++) {
 					DTFeature reDtFeature = reDtFeatureList.get(j);
 					SimpleFeature reSf = reDtFeature.getSimefeature();
@@ -525,7 +526,7 @@ public class LayerValidatorImpl implements LayerValidator {
 		}
 		SimpleFeatureIterator reSfcIter = null;
 		// relation
-		if (relationLayers != null) { // 1개
+		if (relationLayers != null) { 
 			for (int i = 0; i < relationLayers.size(); i++) {
 				DTLayer relationLayer = relationLayers.get(i);
 				String relationLayerId = relationLayer.getLayerID();
@@ -542,7 +543,8 @@ public class LayerValidatorImpl implements LayerValidator {
 						// relationLayers.size() == 1
 						layerID.equals(relationLayerId)
 						) {
-					int core = Runtime.getRuntime().availableProcessors();
+//					int core = Runtime.getRuntime().availableProcessors();
+					int core = 2;
 					ExecutorService executorService = Executors.newFixedThreadPool(core, new ThreadFactoryBuilder().setNameFormat("self 검수-%d").build());
 					DTFeatureList dtFeatureListJ = new DTFeatureList();
 					List<Future<List<ErrorFeature>>> futures = new ArrayList<>();
