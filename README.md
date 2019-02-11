@@ -7,7 +7,8 @@ ValidatorBatch-v0.1 (공간자료 검증 배치파일 v0.1)
 =======
 이 프로젝트는 국토공간정보연구사업 중 [공간정보 SW 활용을 위한 오픈소스 가공기술 개발]과제의 5차년도 연구성과 입니다.<br>
 본 프로그램은 로컬기반의 검수를 수행하기 위한 배치파일로써 [OpenGDS-Desktop-QgisPlugin](https://github.com/ODTBuilder/OpenGDS-Desktop-QgisPlugin) 검수를 지원하기 위해 개발되었습니다.<br>
-배치파일은 3, 4차년도 때 Web기반으로 개발된 공간정보 검수도구인 OpenGDS(https://github.comODTBuilderOpenGDS-Builder-Javascript )와 Validator(https://github.comODTBuilderValidator )로 개발되었습니다. Geoserver 연동 없이 로컬파일을 직접 읽어 검수함으로써 기존 이슈였던 대용량 지원 및 고속검수가 가능합니다.
+배치파일은 3, 4차년도 때 Web기반으로 개발된 공간정보 검수도구인 OpenGDS(https://github.comODTBuilderOpenGDS-Builder-Javascript )와 Validator(https://github.comODTBuilderValidator )로 개발되었습니다.
+<br>Geoserver 연동 없이 로컬파일을 직접 읽어 검수함으로써 기존 이슈였던 대용량 지원 및 고속검수가 가능합니다.
 
 
 감사합니다.<br>
