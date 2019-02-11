@@ -19,7 +19,7 @@ OpenGeoDT 팀
 Getting Started
 =====
 ### 1. 환경 ###
-- Java - OpenGDK 1.8.0.111 64 bit
+- Java - OpenJDK 1.8.0.111 64 bit, JDK 1.8.0_192
 
 ### 2. 연동방법 ###
  - 연동방법은 [배치파일_인터페이스설계서](https://github.com/ODTBuilder/ValidatorBatch-v0.1/blob/master/%EB%B0%B0%EC%B9%98%ED%8C%8C%EC%9D%BC_%EC%9D%B8%ED%84%B0%ED%8E%98%EC%9D%B4%EC%8A%A4%EC%84%A4%EA%B3%84%EC%84%9C.docx)를 참고하시길 바랍니다.
