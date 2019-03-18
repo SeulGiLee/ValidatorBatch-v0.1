@@ -359,9 +359,6 @@ public class QAFileParser {
 	}
 
 	private void parseForestQA20File() {
-		
-
-
 		if (this.unZipFile.isDir()) {
 			Map<String, FileMetaList> dirMetaList = this.unZipFile.getDirMetaList();
 			DTLayerCollectionList collectionList = new DTLayerCollectionList();

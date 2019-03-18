@@ -43,7 +43,7 @@ public class Progress {
 		// System.out.println(max);
 		// pb = new ProgressBar("진행중", 100, ProgressBarStyle.ASCII);
 		// default : System.err 에서 변경
-		pb = new ProgressBar("진행중", 100, 1000, System.out, ProgressBarStyle.ASCII, "", 1);
+		pb = new ProgressBar("Proceeding", 100, 1000, System.out, ProgressBarStyle.ASCII, "", 1);
 	}
 
 	public static void modifyMax() {

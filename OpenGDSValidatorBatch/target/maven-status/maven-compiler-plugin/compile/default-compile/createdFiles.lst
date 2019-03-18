@@ -14,6 +14,7 @@ com\git\gdsbuilder\validator\collection\opt\ValCollectionOption.class
 com\git\gdsbuilder\validator\feature\FeatureAttributeValidatorImpl.class
 com\git\gdsbuilder\validator\feature\filter\FeatureFilter.class
 com\git\batch\App.class
+com\git\batch\step\Progress.class
 com\git\gdsbuilder\validator\feature\FeatureCloseCollectionValidator.class
 com\git\gdsbuilder\validator\fileReader\UnZipFile.class
 com\git\gdsbuilder\validator\layer\LayerValidatorImpl$1ValidateUNodeMissResult.class
@@ -26,6 +27,7 @@ com\git\gdsbuilder\validator\collection\CollectionValidator.class
 com\git\gdsbuilder\type\validate\option\type\UFMQAOptions.class
 com\git\gdsbuilder\validator\fileReader\dxf\parser\DXFFileFeatureParser.class
 com\git\gdsbuilder\parser\file\QAFileParser.class
+com\git\gdsbuilder\validator\layer\LayerValidatorImpl$6Task.class
 com\git\gdsbuilder\validator\collection\CloseCollectionResult.class
 com\git\batch\service\BathService$2.class
 com\git\gdsbuilder\type\validate\option\specific\AttributeFilter.class
@@ -38,7 +40,6 @@ com\git\gdsbuilder\type\validate\error\ErrorLayer.class
 com\git\gdsbuilder\validator\layer\LayerValidatorImpl$3Task.class
 com\git\gdsbuilder\type\validate\option\type\UFMQAOptions$Type.class
 com\git\gdsbuilder\validator\fileReader\ngi\parser\NGIFileLayerParser.class
-com\git\batch\service\BathService$3.class
 com\git\gdsbuilder\type\validate\option\specific\OptionFigure.class
 com\git\gdsbuilder\validator\fileReader\ngi\header\NDAHeader.class
 com\git\gdsbuilder\validator\layer\LayerValidatorImpl$1ValidateUSymbolOutResult.class

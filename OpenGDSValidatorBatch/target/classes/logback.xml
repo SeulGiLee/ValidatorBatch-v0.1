@@ -3,6 +3,7 @@
 	<!--appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender"> 
 		<encoder> <charset>EUC-KR</charset> <Pattern>%d{HH:mm} %-5level %logger{36} 
 		- %msg%n</Pattern> </encoder> </appender -->
+		
 	<statusListener class="ch.qos.logback.core.status.NopStatusListener" /> <!-- logback 자체 로깅 중지 -->
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
