@@ -506,7 +506,6 @@ public class LayerValidatorImpl implements LayerValidator {
 
 			@Override
 			public void run() {
-				System.out.println(dtFeature.getSimefeature().getAttribute("osm_id"));
 				for (int j = this.index; j < reDtFeatureList.size(); j++) {
 					DTFeature reDtFeature = reDtFeatureList.get(j);
 					SimpleFeature reSf = reDtFeature.getSimefeature();
