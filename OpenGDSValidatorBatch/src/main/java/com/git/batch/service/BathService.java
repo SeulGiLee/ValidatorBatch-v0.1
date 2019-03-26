@@ -73,10 +73,9 @@ public class BathService {
 	public static Progress pb;
 
 	{
-
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		Properties properties = new Properties();
-		
+
 		try {
 			InputStream inputStream = classLoader.getResourceAsStream("batch.properties");
 			properties.load(inputStream);
@@ -85,7 +84,7 @@ public class BathService {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		QA1DEFDIR = properties.getProperty("qa1DefDir");
 		QA2DEFDIR = properties.getProperty("qa2DefDir");
 
@@ -125,16 +124,27 @@ public class BathService {
 	Logger logger = LoggerFactory.getLogger(BathService.class);
 
 	/**
-	 * @param baseDir 최상위 폴더
-	 * @param valType 검수타입(수치지도, 지하시설물, 임상도)
-	 * @param pFlag 기존옵션여부
-	 * @param valDType 검수 세부타입(정위치, 구조화)
-	 * @param fileType 파일타입(dxf, ngi, shp)
-	 * @param category 옵션타입(1 - 수치지도1.0, 2 - 수치지도 2.0, 3 - 지하시설물 1.0, 4 - 지하시설물 2.0, 5 - 임상도)
-	 * @param layerDefPath 레이어 정의 옵션 경로
-	 * @param valOptPath 검수 옵션경로
-	 * @param objFilePath 검수 대상파일 경로
-	 * @param crs 좌표계
+	 * @param baseDir
+	 *            최상위 폴더
+	 * @param valType
+	 *            검수타입(수치지도, 지하시설물, 임상도)
+	 * @param pFlag
+	 *            기존옵션여부
+	 * @param valDType
+	 *            검수 세부타입(정위치, 구조화)
+	 * @param fileType
+	 *            파일타입(dxf, ngi, shp)
+	 * @param category
+	 *            옵션타입(1 - 수치지도1.0, 2 - 수치지도 2.0, 3 - 지하시설물 1.0, 4 - 지하시설물 2.0,
+	 *            5 - 임상도)
+	 * @param layerDefPath
+	 *            레이어 정의 옵션 경로
+	 * @param valOptPath
+	 *            검수 옵션경로
+	 * @param objFilePath
+	 *            검수 대상파일 경로
+	 * @param crs
+	 *            좌표계
 	 * @return
 	 * @throws Throwable
 	 */
@@ -244,11 +254,11 @@ public class BathService {
 		// 옵션또는 파일이 제대로 넘어오지 않았을때 강제로 예외발생
 		if (qaVer == null || qaType == null || prid == null) {
 			// logger.info("다시 요청해주세요.");
-//			System.out.println("다시 요청해주세요.");
+			// System.out.println("다시 요청해주세요.");
 			System.out.println("Please request again.");
 			return isSuccess;
 		} else if (fileformat == null) {
-//			System.out.println("파일포맷을 설정해주세요.");
+			// System.out.println("파일포맷을 설정해주세요.");
 			System.out.println("Please set the file format.");
 			// logger.info("파일포맷을 설정해주세요.");
 			return isSuccess;
@@ -300,7 +310,7 @@ public class BathService {
 				}
 			}
 			if (!checkExt) {
-//				System.out.println("검수 대상 파일에 " + fileType + "가 존재하지 않습니다.");
+				// System.out.println("검수 대상 파일에 " + fileType + "가 존재하지 않습니다.");
 				System.out.println(fileType + " does not exist in the target file.");
 				throw new Throwable();
 			}
@@ -313,14 +323,14 @@ public class BathService {
 			try {
 				option = (JSONObject) ((Object) jsonP.parse(new FileReader(valOptPath)));
 			} catch (ClassCastException e) {
-//				System.out.println("잘못된 옵션 파일입니다.");
+				// System.out.println("잘못된 옵션 파일입니다.");
 				System.out.println("Invalid option file");
 				throw new Throwable();
 			}
 			try {
 				layers = (JSONArray) ((Object) jsonP.parse(new FileReader(layerDefPath)));
 			} catch (ClassCastException e) {
-//				System.out.println("잘못된 레이어 정의 파일입니다.");
+				// System.out.println("잘못된 레이어 정의 파일입니다.");
 				System.out.println("Invalid layer definition file.");
 				throw new Throwable();
 			}
@@ -410,7 +420,7 @@ public class BathService {
 			isSuccess = executorValidate(collectionList, validateLayerTypeList, epsg);
 			if (isSuccess) {
 				// logger.info("검수 요청이 성공적으로 완료되었습니다.");
-//				System.out.println("검수 요청이 성공적으로 완료되었습니다.");
+				// System.out.println("검수 요청이 성공적으로 완료되었습니다.");
 				System.out.println("Validation request completed successfully.");
 				// zip err shp directory
 				/*
@@ -420,7 +430,7 @@ public class BathService {
 			} else {
 				// insert validate state
 				// logger.info("검수 요청이 실패했습니다.");
-//				System.out.println("검수 요청이 실패했습니다.");
+				// System.out.println("검수 요청이 실패했습니다.");
 				System.out.println("Validation request failed.");
 			}
 			validateTypeParser = null;
@@ -514,15 +524,15 @@ public class BathService {
 	 * 
 	 * File directory = new File(ERR_FILE_DIR); List<String> fileList =
 	 * getFileList(directory); try { ERR_ZIP_DIR = ERR_FILE_DIR + ".zip";
-	 * FileOutputStream fos = new FileOutputStream(ERR_ZIP_DIR); ZipOutputStream zos
-	 * = new ZipOutputStream(fos);
+	 * FileOutputStream fos = new FileOutputStream(ERR_ZIP_DIR); ZipOutputStream
+	 * zos = new ZipOutputStream(fos);
 	 * 
 	 * for (String filePath : fileList) { String name =
 	 * filePath.substring(directory.getAbsolutePath().length() + 1,
 	 * filePath.length()); ZipEntry zipEntry = new ZipEntry(name);
 	 * zos.putNextEntry(zipEntry); FileInputStream fis = new
-	 * FileInputStream(filePath); byte[] buffer = new byte[1024]; int length; while
-	 * ((length = fis.read(buffer)) > 0) { zos.write(buffer, 0, length); }
+	 * FileInputStream(filePath); byte[] buffer = new byte[1024]; int length;
+	 * while ((length = fis.read(buffer)) > 0) { zos.write(buffer, 0, length); }
 	 * zos.closeEntry(); fis.close();
 	 * 
 	 * // 압축 후 삭제 File file = new File(filePath); file.delete(); } zos.close();
@@ -535,8 +545,8 @@ public class BathService {
 	 * 
 	 * List<String> fileList = new ArrayList<>();
 	 * 
-	 * File[] files = directory.listFiles(); if (files != null && files.length > 0)
-	 * { for (File file : files) { if (file.isFile()) {
+	 * File[] files = directory.listFiles(); if (files != null && files.length >
+	 * 0) { for (File file : files) { if (file.isFile()) {
 	 * fileList.add(file.getAbsolutePath()); } else { getFileList(file); } } }
 	 * return fileList; }
 	 */
@@ -714,7 +724,8 @@ public class BathService {
 	// indexFiles.add(fileList[i]);// 도곽파일 리스트 add(shp,shx...)
 	// } else {
 	// if (_fileName.contains(".")) {
-	// moveDirectory(_fileName.substring(0, _fileName.lastIndexOf(".")), fFullName,
+	// moveDirectory(_fileName.substring(0, _fileName.lastIndexOf(".")),
+	// fFullName,
 	// filePath,
 	// parentPath);
 	// } else {

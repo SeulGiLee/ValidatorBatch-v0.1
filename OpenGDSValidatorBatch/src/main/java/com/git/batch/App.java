@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.ParameterException;
 import com.git.batch.domain.BatchArgs;
-import com.git.batch.license.DateCheck;
-import com.git.batch.license.MacCheck;
 import com.git.batch.service.BathService;
+import com.git.batch.service.LicenseService;
 
 /**
  * 배치파일 Main 클래스
@@ -23,17 +22,6 @@ public class App {
 	public static void main(String[] args) throws InterruptedException {
 
 		BathService service = new BathService();
-		MacCheck macc = new MacCheck();
-		DateCheck datec = new DateCheck();
-
-		if (!macc.isAllowed()) {
-			System.out.println("Request failed - you need license.");
-			System.exit(500);
-		}
-		if (!datec.isAllowed()) {
-			System.out.println("Request failed - your license is expired.");
-			System.exit(500);
-		}
 		boolean flag = false;
 		// System.out.println("\n검수를 진행합니다.");
 		System.out.println("\nVerification is in progress.");
@@ -43,7 +31,6 @@ public class App {
 
 		try { // Parse given arguments
 			cmd.parse(args);
-
 			String baseDir = params.getBaseDir();
 			String valType = params.getValType();
 			String pFlag = params.getpFlag();
@@ -56,6 +43,13 @@ public class App {
 			String crs = params.getCrs();
 
 			try {
+				LicenseService lservice = new LicenseService();
+				boolean isValidLicense = lservice.isValidLicense(baseDir);
+				if (!isValidLicense) {
+					// System.out.println("요청 실패");
+					System.out.println("invalid license");
+					System.exit(500);
+				}
 				flag = service.validate(baseDir, valType, pFlag, valDType, fileType, category, layerDefPath, valOptPath,
 						objFilePath, crs);
 				if (flag) {

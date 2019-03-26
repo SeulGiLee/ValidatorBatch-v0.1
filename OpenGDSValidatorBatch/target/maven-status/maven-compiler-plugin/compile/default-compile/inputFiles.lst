@@ -6,6 +6,7 @@ D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\fileReader\ngi\NGIDataStoreFactoryExtend.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\fileReader\ngi\parser\NGIFileFeatureParser.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\fileReader\ngi\NGIDataStore.java
+D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\license\AES256Util.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\layer\QALayerType.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\layer\LayerValidator.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\type\FTMQAOptions.java
@@ -16,6 +17,7 @@ D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\domain\BatchArgs.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\standard\FixedValue.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\fileReader\shp\reader\SHPFileReader.java
+D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\license\MacCheck.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\specific\CloseMiss.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\specific\GraphicMiss.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\feature\FeatureCloseCollectionValidator.java
@@ -26,6 +28,7 @@ D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\fileReader\dxf\parser\DXFFileLayerParser.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\specific\AttributeFigure.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\fileReader\ngi\header\NDAField.java
+D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\license\DateCheck.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\file\FileMeta.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\type\NMQAOptions.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\collection\opt\ValCollectionOption.java
@@ -35,6 +38,7 @@ D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\standard\LayerFixMiss.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\step\Progress.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\error\ErrorFeature.java
+D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\domain\LicenseInfo.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\option\specific\OptionFilter.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\feature\FeatureGraphicValidatorImpl.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\feature\FeatureGraphicValidator.java
@@ -58,6 +62,7 @@ D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\feature\filter\FeatureFilter.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\validate\error\ErrorLayerList.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\validator\fileReader\shp\parser\SHPFileLayerParser.java
+D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\service\LicenseService.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\dt\feature\DTFeature.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\batch\service\BathService.java
 D:\github_workspace\ValidatorBatch-v0.1\OpenGDSValidatorBatch\src\main\java\com\git\gdsbuilder\type\dt\layer\DTLayerList.java

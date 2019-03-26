@@ -1,108 +1,116 @@
 package com.git.batch.license;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.Properties;
+import java.util.Map;
 
 import org.apache.commons.net.ntp.NTPUDPClient;
-import org.apache.commons.net.ntp.TimeInfo;
 
 public class DateCheck {
+	// 타임서버 주소
 	private static final String TIME_SERVER = "pool.ntp.org";
-	long untilDate = 0;
-	long currentDate = 0;
+	// 현재 실행 시간
+	private static long currentDate = 0;
+	private static boolean isOnline = false;
 
 	public DateCheck() {
 		super();
+		// NTPUDPClient timeClient = new NTPUDPClient();
+		// timeClient.setDefaultTimeout(1000);
+		// try {
+		// timeClient.open();
+		// InetAddress address = InetAddress.getByName(TIME_SERVER);
+		// TimeInfo timeInfo = timeClient.getTime(address);
+		// long returnTime =
+		// timeInfo.getMessage().getTransmitTimeStamp().getTime();
+		// flag = true;
+		// this.setCurrentDate(returnTime);
+		// } catch (SocketException e) {
+		// TODO Auto-generated catch block
+		DateCheck.setCurrentDate(System.currentTimeMillis());
+		// e.printStackTrace();
+		// } catch (UnknownHostException e) {
+		// // TODO Auto-generated catch block
+		// this.setCurrentDate(System.currentTimeMillis());
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// this.setCurrentDate(System.currentTimeMillis());
+		// e.printStackTrace();
+		// }
+
+	}
+
+	public boolean checkYourLastDate(Map<String, Long> last, String mac) {
+		boolean success = false;
+		long lastDate = last.get(mac);
+		long latest = DateCheck.getCurrentDate();
+		if (latest != 0 && lastDate != 0) {
+			if (lastDate <= latest) {
+				success = true;
+			}
+		}
+		return success;
 	}
 
 	public boolean setYourCurrentDate() {
 		boolean flag = false;
 		NTPUDPClient timeClient = new NTPUDPClient();
 		timeClient.setDefaultTimeout(1000);
-		try {
-			timeClient.open();
-			InetAddress address = InetAddress.getByName(TIME_SERVER);
-			TimeInfo timeInfo = timeClient.getTime(address);
-			long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
-			flag = true;
-			this.setCurrentDate(returnTime);
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			this.setCurrentDate(System.currentTimeMillis());
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			this.setCurrentDate(System.currentTimeMillis());
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			this.setCurrentDate(System.currentTimeMillis());
-			e.printStackTrace();
-		}
+		// try {
+		// timeClient.open();
+		// InetAddress address = InetAddress.getByName(TIME_SERVER);
+		// TimeInfo timeInfo = timeClient.getTime(address);
+		// long returnTime =
+		// timeInfo.getMessage().getTransmitTimeStamp().getTime();
+		// flag = true;
+		// this.setCurrentDate(returnTime);
+		// } catch (SocketException e) {
+		// TODO Auto-generated catch block
+		DateCheck.setCurrentDate(System.currentTimeMillis());
+		// e.printStackTrace();
+		// } catch (UnknownHostException e) {
+		// // TODO Auto-generated catch block
+		// this.setCurrentDate(System.currentTimeMillis());
+		// e.printStackTrace();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// this.setCurrentDate(System.currentTimeMillis());
+		// e.printStackTrace();
+		// }
 		return flag;
 	}
 
-	public void setYourLimitDate() {
-		try {
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-			Properties properties = new Properties();
-
-			try {
-				InputStream inputStream = classLoader.getResourceAsStream("license.properties");
-				properties.load(inputStream);
-				inputStream.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-			long until = Long.parseLong(properties.getProperty("until"));
-			this.setUntilDate(until);
-		} catch (Exception e2) {
-			// TODO: handle exception
-			e2.printStackTrace();
-		}
-	}
-
-	public Boolean isAllowed() {
+	public Boolean isAllowed(long until, Map<String, Long> last, String mac) {
 		Boolean flag = false;
-		long until = this.getUntilDate();
-		long current = this.getCurrentDate();
-		if (until == 0) {
-			this.setYourLimitDate();
-		}
+		long current = DateCheck.getCurrentDate();
 		if (current == 0) {
 			this.setYourCurrentDate();
+			current = DateCheck.getCurrentDate();
 		}
-		until = this.getUntilDate();
-		current = this.getCurrentDate();
-
 		if (until > 0 && current > 0) {
 			if (current <= until) {
-				flag = true;
+				boolean isHonest = this.checkYourLastDate(last, mac);
+				if (isHonest) {
+					flag = true;
+				}
 			}
 		}
 		return flag;
-	};
-
-	public long getUntilDate() {
-		return untilDate;
 	}
 
-	public void setUntilDate(long untilDate) {
-		this.untilDate = untilDate;
-	}
-
-	public long getCurrentDate() {
+	public static long getCurrentDate() {
 		return currentDate;
 	}
 
-	public void setCurrentDate(long currentDate) {
-		this.currentDate = currentDate;
+	public static void setCurrentDate(long currentDate) {
+		DateCheck.currentDate = currentDate;
+	}
+
+	public static boolean isOnline() {
+		return isOnline;
+	}
+
+	public static void setOnline(boolean isOnline) {
+		DateCheck.isOnline = isOnline;
 	}
 
 }
