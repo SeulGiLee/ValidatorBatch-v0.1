@@ -1,8 +1,13 @@
 package com.git.batch.license;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import org.apache.commons.net.ntp.NTPUDPClient;
+import org.apache.commons.net.ntp.TimeInfo;
 
 public class DateCheck {
 	// 타임서버 주소
@@ -13,30 +18,27 @@ public class DateCheck {
 
 	public DateCheck() {
 		super();
-		// NTPUDPClient timeClient = new NTPUDPClient();
-		// timeClient.setDefaultTimeout(1000);
-		// try {
-		// timeClient.open();
-		// InetAddress address = InetAddress.getByName(TIME_SERVER);
-		// TimeInfo timeInfo = timeClient.getTime(address);
-		// long returnTime =
-		// timeInfo.getMessage().getTransmitTimeStamp().getTime();
-		// flag = true;
-		// this.setCurrentDate(returnTime);
-		// } catch (SocketException e) {
-		// TODO Auto-generated catch block
-		DateCheck.setCurrentDate(System.currentTimeMillis());
-		// e.printStackTrace();
-		// } catch (UnknownHostException e) {
-		// // TODO Auto-generated catch block
-		// this.setCurrentDate(System.currentTimeMillis());
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// this.setCurrentDate(System.currentTimeMillis());
-		// e.printStackTrace();
-		// }
-
+		NTPUDPClient timeClient = new NTPUDPClient();
+		timeClient.setDefaultTimeout(1000);
+		try {
+			timeClient.open();
+			InetAddress address = InetAddress.getByName(TIME_SERVER);
+			TimeInfo timeInfo = timeClient.getTime(address);
+			long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
+			DateCheck.setCurrentDate(returnTime);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			DateCheck.setCurrentDate(System.currentTimeMillis());
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			DateCheck.setCurrentDate(System.currentTimeMillis());
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			DateCheck.setCurrentDate(System.currentTimeMillis());
+			e.printStackTrace();
+		}
 	}
 
 	public boolean checkYourLastDate(Map<String, Long> last, String mac) {
@@ -55,27 +57,26 @@ public class DateCheck {
 		boolean flag = false;
 		NTPUDPClient timeClient = new NTPUDPClient();
 		timeClient.setDefaultTimeout(1000);
-		// try {
-		// timeClient.open();
-		// InetAddress address = InetAddress.getByName(TIME_SERVER);
-		// TimeInfo timeInfo = timeClient.getTime(address);
-		// long returnTime =
-		// timeInfo.getMessage().getTransmitTimeStamp().getTime();
-		// flag = true;
-		// this.setCurrentDate(returnTime);
-		// } catch (SocketException e) {
-		// TODO Auto-generated catch block
-		DateCheck.setCurrentDate(System.currentTimeMillis());
-		// e.printStackTrace();
-		// } catch (UnknownHostException e) {
-		// // TODO Auto-generated catch block
-		// this.setCurrentDate(System.currentTimeMillis());
-		// e.printStackTrace();
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// this.setCurrentDate(System.currentTimeMillis());
-		// e.printStackTrace();
-		// }
+		try {
+			timeClient.open();
+			InetAddress address = InetAddress.getByName(TIME_SERVER);
+			TimeInfo timeInfo = timeClient.getTime(address);
+			long returnTime = timeInfo.getMessage().getTransmitTimeStamp().getTime();
+			flag = true;
+			DateCheck.setCurrentDate(returnTime);
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			DateCheck.setCurrentDate(System.currentTimeMillis());
+			e.printStackTrace();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			DateCheck.setCurrentDate(System.currentTimeMillis());
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			DateCheck.setCurrentDate(System.currentTimeMillis());
+			e.printStackTrace();
+		}
 		return flag;
 	}
 
